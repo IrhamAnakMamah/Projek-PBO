@@ -1,24 +1,24 @@
-package View.ViewBangun2D.Persegi;
+package View.ViewBangun2D.TemberengLingkaran;
 
-import Benda2D.Persegi;
+import Benda2D.TemberengLingkaran;
 import javax.swing.*;
 import java.awt.*;
 
-public class HasilPersegiView extends JFrame {
+public class HasilTemberengLingkaranView extends JFrame {
 
-    public HasilPersegiView(Persegi persegi) {
-        initComponents(persegi);
+    public HasilTemberengLingkaranView(TemberengLingkaran tl) {
+        initComponents(tl);
         setLocationRelativeTo(null);
-        setTitle("Hasil Kalkulasi Persegi");
+        setTitle("Hasil Kalkulasi Tembereng Lingkaran");
     }
 
-    private void initComponents(Persegi persegi) {
+    private void initComponents(TemberengLingkaran tl) {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 400);
+        setSize(500, 450);
         setLayout(null);
 
-        JLabel jLabelTitle = new JLabel("HASIL HITUNG PERSEGI", SwingConstants.CENTER);
-        jLabelTitle.setFont(new Font("Tahoma", Font.BOLD, 24));
+        JLabel jLabelTitle = new JLabel("HASIL HITUNG TEMBERENG", SwingConstants.CENTER);
+        jLabelTitle.setFont(new Font("Tahoma", Font.BOLD, 22));
         jLabelTitle.setBounds(0, 20, 500, 37);
         add(jLabelTitle);
 
@@ -26,23 +26,13 @@ public class HasilPersegiView extends JFrame {
         jSeparator1.setBounds(0, 70, 500, 10);
         add(jSeparator1);
 
-        JLabel jLabelInputSisi = new JLabel("Input Sisi :");
-        jLabelInputSisi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jLabelInputSisi.setBounds(70, 100, 150, 25);
-        add(jLabelInputSisi);
-
-        JTextField jTextFieldSisi = new JTextField(String.valueOf(persegi.sisi));
-        jTextFieldSisi.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jTextFieldSisi.setBounds(230, 100, 200, 25);
-        jTextFieldSisi.setEditable(false);
-        add(jTextFieldSisi);
-
+        // Karena input tidak bisa diakses kembali dari objek, kita hanya tampilkan hasil
         JLabel jLabelLuas = new JLabel("Luas :");
         jLabelLuas.setFont(new Font("Tahoma", Font.BOLD, 16));
         jLabelLuas.setBounds(70, 160, 150, 25);
         add(jLabelLuas);
 
-        JTextField jTextFieldLuas = new JTextField(String.format("%.2f", persegi.getLuasPersegi()));
+        JTextField jTextFieldLuas = new JTextField(String.format("%.2f", tl.getLuasTembereng())); //
         jTextFieldLuas.setFont(new Font("Tahoma", Font.BOLD, 16));
         jTextFieldLuas.setBounds(230, 160, 200, 30);
         jTextFieldLuas.setEditable(false);
@@ -53,29 +43,31 @@ public class HasilPersegiView extends JFrame {
         jLabelKeliling.setBounds(70, 210, 150, 25);
         add(jLabelKeliling);
 
-        JTextField jTextFieldKeliling = new JTextField(String.format("%.2f", persegi.getKelilingPersegi()));
+        JTextField jTextFieldKeliling = new JTextField(String.format("%.2f", tl.getKelilingTembereng())); //
         jTextFieldKeliling.setFont(new Font("Tahoma", Font.BOLD, 16));
         jTextFieldKeliling.setBounds(230, 210, 200, 30);
         jTextFieldKeliling.setEditable(false);
         add(jTextFieldKeliling);
 
         JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 300, 500, 10);
+        jSeparator2.setBounds(0, 350, 500, 10);
         add(jSeparator2);
 
         JButton jButtonEdit = new JButton("Edit");
         jButtonEdit.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonEdit.setBounds(120, 320, 100, 30);
+        jButtonEdit.setBounds(120, 370, 100, 30);
         add(jButtonEdit);
 
         JButton jButtonClose = new JButton("Close");
         jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(280, 320, 100, 30);
+        jButtonClose.setBounds(280, 370, 100, 30);
         add(jButtonClose);
 
         jButtonEdit.addActionListener(e -> {
             dispose();
-            new PersegiView(persegi).setVisible(true);
+            // Karena properti private, kita tidak bisa pass objeknya untuk di-edit
+            // Jadi kita buka view kosong baru
+            new TemberengLingkaranView().setVisible(true);
         });
 
         jButtonClose.addActionListener(e -> dispose());

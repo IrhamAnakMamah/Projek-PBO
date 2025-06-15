@@ -1,23 +1,23 @@
-package View.ViewBangun2D.Persegi;
+package View.ViewBangun2D.Lingkaran;
 
-import Benda2D.Persegi;
+import Benda2D.Lingkaran;
 import javax.swing.*;
 import java.awt.*;
 
-public class HasilPersegiView extends JFrame {
+public class HasilLingkaranView extends JFrame {
 
-    public HasilPersegiView(Persegi persegi) {
-        initComponents(persegi);
+    public HasilLingkaranView(Lingkaran lingkaran) {
+        initComponents(lingkaran);
         setLocationRelativeTo(null);
-        setTitle("Hasil Kalkulasi Persegi");
+        setTitle("Hasil Kalkulasi Lingkaran");
     }
 
-    private void initComponents(Persegi persegi) {
+    private void initComponents(Lingkaran lingkaran) {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 400);
         setLayout(null);
 
-        JLabel jLabelTitle = new JLabel("HASIL HITUNG PERSEGI", SwingConstants.CENTER);
+        JLabel jLabelTitle = new JLabel("HASIL HITUNG LINGKARAN", SwingConstants.CENTER);
         jLabelTitle.setFont(new Font("Tahoma", Font.BOLD, 24));
         jLabelTitle.setBounds(0, 20, 500, 37);
         add(jLabelTitle);
@@ -26,23 +26,23 @@ public class HasilPersegiView extends JFrame {
         jSeparator1.setBounds(0, 70, 500, 10);
         add(jSeparator1);
 
-        JLabel jLabelInputSisi = new JLabel("Input Sisi :");
-        jLabelInputSisi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jLabelInputSisi.setBounds(70, 100, 150, 25);
-        add(jLabelInputSisi);
+        JLabel jLabelInputJari = new JLabel("Input Jari-Jari :");
+        jLabelInputJari.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        jLabelInputJari.setBounds(70, 100, 150, 25);
+        add(jLabelInputJari);
 
-        JTextField jTextFieldSisi = new JTextField(String.valueOf(persegi.sisi));
-        jTextFieldSisi.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jTextFieldSisi.setBounds(230, 100, 200, 25);
-        jTextFieldSisi.setEditable(false);
-        add(jTextFieldSisi);
+        JTextField jTextFieldJari = new JTextField(String.valueOf(lingkaran.getJariJari()));
+        jTextFieldJari.setFont(new Font("Tahoma", Font.BOLD, 14));
+        jTextFieldJari.setBounds(230, 100, 200, 25);
+        jTextFieldJari.setEditable(false);
+        add(jTextFieldJari);
 
         JLabel jLabelLuas = new JLabel("Luas :");
         jLabelLuas.setFont(new Font("Tahoma", Font.BOLD, 16));
         jLabelLuas.setBounds(70, 160, 150, 25);
         add(jLabelLuas);
 
-        JTextField jTextFieldLuas = new JTextField(String.format("%.2f", persegi.getLuasPersegi()));
+        JTextField jTextFieldLuas = new JTextField(String.format("%.2f", lingkaran.getLuasLingkaran()));
         jTextFieldLuas.setFont(new Font("Tahoma", Font.BOLD, 16));
         jTextFieldLuas.setBounds(230, 160, 200, 30);
         jTextFieldLuas.setEditable(false);
@@ -53,7 +53,7 @@ public class HasilPersegiView extends JFrame {
         jLabelKeliling.setBounds(70, 210, 150, 25);
         add(jLabelKeliling);
 
-        JTextField jTextFieldKeliling = new JTextField(String.format("%.2f", persegi.getKelilingPersegi()));
+        JTextField jTextFieldKeliling = new JTextField(String.format("%.2f", lingkaran.getKelilingLingkaran()));
         jTextFieldKeliling.setFont(new Font("Tahoma", Font.BOLD, 16));
         jTextFieldKeliling.setBounds(230, 210, 200, 30);
         jTextFieldKeliling.setEditable(false);
@@ -75,7 +75,7 @@ public class HasilPersegiView extends JFrame {
 
         jButtonEdit.addActionListener(e -> {
             dispose();
-            new PersegiView(persegi).setVisible(true);
+            new LingkaranView(lingkaran).setVisible(true);
         });
 
         jButtonClose.addActionListener(e -> dispose());
