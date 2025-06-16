@@ -16,20 +16,18 @@ public class PrismaSegitiga extends Segitiga implements Benda3D, Runnable{
     private double luasSisiTegak;
     private double luasPermukaanPrismaSegitiga;
 
-    public PrismaSegitiga(double alas, double tinggi, double tinggiPrismaSegitiga, double sisiA, double sisiB, double sisiC) {
+    public PrismaSegitiga(double alas, double tinggi, double tinggiPrismaSegitiga) {
         super(alas,tinggi);
-        this.sisiA = sisiA;
-        this.sisiB = sisiB;
-        this.sisiC = sisiC;
-        volumePrismaSegitiga = hitungVolume();
+        this.tinggiPrismaSegitiga = tinggiPrismaSegitiga;
     }
 
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
         super.run();
-        luasPermukaanPrismaSegitiga = hitungLuasPermukaan();
         luasSisiTegak = hitungLuasSisiTegak();
+        luasPermukaanPrismaSegitiga = hitungLuasPermukaan();
+        volumePrismaSegitiga = hitungVolume();
     }
 
     public double getTinggiPrismaSegitiga() {
@@ -63,7 +61,7 @@ public class PrismaSegitiga extends Segitiga implements Benda3D, Runnable{
     }
 
     public double hitungLuasSisiTegak(){
-        return sisiA + sisiB + sisiC * tinggiPrismaSegitiga;
+        return sisi * tinggiPrismaSegitiga;
     }
 
     public double getLuasSisiTegak(){

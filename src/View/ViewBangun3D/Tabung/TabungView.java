@@ -1,26 +1,26 @@
-package View.ViewBangun2D.Segitiga;
+package View.ViewBangun3D.Tabung;
 
-import Benda2D.Segitiga;
+import Benda3D.Tabung;
 import javax.swing.*;
 import java.awt.*;
 
-public class SegitigaView extends JFrame {
+public class TabungView extends JFrame {
 
-    Segitiga segitiga;
+    Tabung tabung;
+    JTextField jTextFieldJari = new JTextField();
     JTextField jTextFieldTinggi = new JTextField();
-    JTextField jTextFieldAlas = new JTextField();
 
-    public SegitigaView() {
+    public TabungView() {
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Kalkulator Segitiga");
+        setTitle("Kalkulator Tabung");
     }
 
-    public SegitigaView(Segitiga segitiga) {
-        this.segitiga = segitiga;
+    public TabungView(Tabung tabung) {
+        this.tabung = tabung;
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Kalkulator Segitiga");
+        setTitle("Kalkulator Tabung");
     }
 
     private void initComponents() {
@@ -28,29 +28,27 @@ public class SegitigaView extends JFrame {
         setSize(500, 400);
         setLayout(null);
 
-        JLabel jLabelTitle = new JLabel("SEGITIGA");
+        JLabel jLabelTitle = new JLabel("TABUNG");
         jLabelTitle.setFont(new Font("Tahoma", Font.BOLD, 30));
-        jLabelTitle.setBounds(170, 20, 300, 37);
+        jLabelTitle.setBounds(180, 20, 300, 37);
         add(jLabelTitle);
 
         JSeparator jSeparator1 = new JSeparator();
         jSeparator1.setBounds(0, 70, 500, 10);
         add(jSeparator1);
 
-        JLabel jLabelAlas = new JLabel("Alas (Sisi) :");
-        jLabelAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelAlas.setBounds(70, 100, 150, 25);
-        add(jLabelAlas);
+        JLabel jLabelJari = new JLabel("Jari-Jari Alas:");
+        jLabelJari.setFont(new Font("Tahoma", Font.BOLD, 14));
+        jLabelJari.setBounds(70, 100, 150, 25);
+        add(jLabelJari);
+        jTextFieldJari.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        jTextFieldJari.setBounds(230, 100, 200, 25);
+        add(jTextFieldJari);
 
-        jTextFieldAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldAlas.setBounds(230, 100, 200, 25);
-        add(jTextFieldAlas);
-
-        JLabel jLabelTinggi = new JLabel("Tinggi :");
+        JLabel jLabelTinggi = new JLabel("Tinggi Tabung :");
         jLabelTinggi.setFont(new Font("Tahoma", Font.BOLD, 14));
         jLabelTinggi.setBounds(70, 140, 150, 25);
         add(jLabelTinggi);
-
         jTextFieldTinggi.setFont(new Font("Tahoma", Font.PLAIN, 14));
         jTextFieldTinggi.setBounds(230, 140, 200, 25);
         add(jTextFieldTinggi);
@@ -78,58 +76,39 @@ public class SegitigaView extends JFrame {
 
         jButtonsSave.addActionListener(e -> {
             try {
-                double alas = Double.parseDouble(jTextFieldAlas.getText());
+                double jari = Double.parseDouble(jTextFieldJari.getText());
                 double tinggi = Double.parseDouble(jTextFieldTinggi.getText());
-                if (alas <= 0 || tinggi <= 0) {
+                if (jari <= 0 || tinggi <= 0) {
                     throw new NumberFormatException("Input tidak boleh nol atau negatif!");
                 }
+                Tabung newTabung = new Tabung(jari, tinggi); //
 
-                Segitiga segitiga = new Segitiga(alas, tinggi); //
-
-                // ==========================================================
-                // --- BAGIAN YANG DIUBAH ---
-                // ==========================================================
-
-                // 1. Jalankan thread untuk kalkulasi di background
-                Thread calcThread = new Thread(segitiga);
+                Thread calcThread = new Thread(newTabung);
                 calcThread.start();
-
-                // 2. Tunggu sampai kalkulasi selesai sebelum menampilkan hasil
                 try {
                     calcThread.join();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
 
-                // 3. Tampilkan GUI Hasil
-                new HasilSegitigaView(segitiga).setVisible(true);
-
-                // ==========================================================
-                // --- AKHIR BAGIAN YANG DIUBAH ---
-                // ==========================================================
-
-                // Tutup window input ini
+                new HasilTabungView(newTabung).setVisible(true);
                 dispose();
-
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         jButtonReset.addActionListener(e -> {
-            jTextFieldAlas.setText("");
+            jTextFieldJari.setText("");
             jTextFieldTinggi.setText("");
         });
-
         jButtonClose.addActionListener(e -> dispose());
     }
 
-    void cek(){
-        if(segitiga != null){
-            int alas = (int)segitiga.sisi;
-            int tinggi = (int)segitiga.tinggi;
-            jTextFieldAlas.setText(Integer.toString(alas));
-            jTextFieldTinggi.setText(Integer.toString(tinggi));
+    void cek() {
+        if (tabung != null) {
+            jTextFieldJari.setText(String.valueOf(tabung.getJariJari()));
+            // tinggiTabung is private, need getter
         }
     }
 }

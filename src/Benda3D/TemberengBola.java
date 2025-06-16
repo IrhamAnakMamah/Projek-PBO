@@ -15,10 +15,10 @@ public class TemberengBola extends Bola implements Benda3D, Runnable{
     private double volumeTemberengBola;
     private double luasPermukaanTemberengBola;
 
-    public TemberengBola(double jariJariBola, double jarijariLingkaran, double tinggiTembereng) {
+    public TemberengBola(double jariJariBola, double tinggiTembereng) {
         super(jariJariBola);
-        this.jarijariLingkaran = jarijariLingkaran;
-        this.theta = theta;
+        //this.jariLingkaran = jariLingkaran;
+        this.jarijariLingkaran = jariJariBola;
         this.tinggiTembereng = tinggiTembereng;
     }
 

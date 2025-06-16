@@ -1,26 +1,26 @@
-package View.ViewBangun2D.Segitiga;
+package View.ViewBangun3D.PrismaPersegi;
 
-import Benda2D.Segitiga;
+import Benda3D.PrismaPersegi;
 import javax.swing.*;
 import java.awt.*;
 
-public class SegitigaView extends JFrame {
+public class PrismaPersegiView extends JFrame {
 
-    Segitiga segitiga;
+    PrismaPersegi prismaPersegi;
+    JTextField jTextFieldSisi = new JTextField();
     JTextField jTextFieldTinggi = new JTextField();
-    JTextField jTextFieldAlas = new JTextField();
 
-    public SegitigaView() {
+    public PrismaPersegiView() {
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Kalkulator Segitiga");
+        setTitle("Kalkulator Prisma Persegi");
     }
 
-    public SegitigaView(Segitiga segitiga) {
-        this.segitiga = segitiga;
+    public PrismaPersegiView(PrismaPersegi prismaPersegi) {
+        this.prismaPersegi = prismaPersegi;
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Kalkulator Segitiga");
+        setTitle("Kalkulator Prisma Persegi");
     }
 
     private void initComponents() {
@@ -28,29 +28,27 @@ public class SegitigaView extends JFrame {
         setSize(500, 400);
         setLayout(null);
 
-        JLabel jLabelTitle = new JLabel("SEGITIGA");
+        JLabel jLabelTitle = new JLabel("PRISMA PERSEGI");
         jLabelTitle.setFont(new Font("Tahoma", Font.BOLD, 30));
-        jLabelTitle.setBounds(170, 20, 300, 37);
+        jLabelTitle.setBounds(100, 20, 300, 37);
         add(jLabelTitle);
 
         JSeparator jSeparator1 = new JSeparator();
         jSeparator1.setBounds(0, 70, 500, 10);
         add(jSeparator1);
 
-        JLabel jLabelAlas = new JLabel("Alas (Sisi) :");
-        jLabelAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelAlas.setBounds(70, 100, 150, 25);
-        add(jLabelAlas);
+        JLabel jLabelSisi = new JLabel("Sisi Alas:");
+        jLabelSisi.setFont(new Font("Tahoma", Font.BOLD, 14));
+        jLabelSisi.setBounds(70, 100, 150, 25);
+        add(jLabelSisi);
+        jTextFieldSisi.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        jTextFieldSisi.setBounds(230, 100, 200, 25);
+        add(jTextFieldSisi);
 
-        jTextFieldAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldAlas.setBounds(230, 100, 200, 25);
-        add(jTextFieldAlas);
-
-        JLabel jLabelTinggi = new JLabel("Tinggi :");
+        JLabel jLabelTinggi = new JLabel("Tinggi Prisma :");
         jLabelTinggi.setFont(new Font("Tahoma", Font.BOLD, 14));
         jLabelTinggi.setBounds(70, 140, 150, 25);
         add(jLabelTinggi);
-
         jTextFieldTinggi.setFont(new Font("Tahoma", Font.PLAIN, 14));
         jTextFieldTinggi.setBounds(230, 140, 200, 25);
         add(jTextFieldTinggi);
@@ -78,58 +76,39 @@ public class SegitigaView extends JFrame {
 
         jButtonsSave.addActionListener(e -> {
             try {
-                double alas = Double.parseDouble(jTextFieldAlas.getText());
+                double sisi = Double.parseDouble(jTextFieldSisi.getText());
                 double tinggi = Double.parseDouble(jTextFieldTinggi.getText());
-                if (alas <= 0 || tinggi <= 0) {
+                if (sisi <= 0 || tinggi <= 0) {
                     throw new NumberFormatException("Input tidak boleh nol atau negatif!");
                 }
+                PrismaPersegi newPrisma = new PrismaPersegi(sisi, tinggi); //
 
-                Segitiga segitiga = new Segitiga(alas, tinggi); //
-
-                // ==========================================================
-                // --- BAGIAN YANG DIUBAH ---
-                // ==========================================================
-
-                // 1. Jalankan thread untuk kalkulasi di background
-                Thread calcThread = new Thread(segitiga);
+                Thread calcThread = new Thread(newPrisma);
                 calcThread.start();
-
-                // 2. Tunggu sampai kalkulasi selesai sebelum menampilkan hasil
                 try {
                     calcThread.join();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
 
-                // 3. Tampilkan GUI Hasil
-                new HasilSegitigaView(segitiga).setVisible(true);
-
-                // ==========================================================
-                // --- AKHIR BAGIAN YANG DIUBAH ---
-                // ==========================================================
-
-                // Tutup window input ini
+                new HasilPrismaPersegiView(newPrisma).setVisible(true);
                 dispose();
-
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         jButtonReset.addActionListener(e -> {
-            jTextFieldAlas.setText("");
+            jTextFieldSisi.setText("");
             jTextFieldTinggi.setText("");
         });
-
         jButtonClose.addActionListener(e -> dispose());
     }
 
-    void cek(){
-        if(segitiga != null){
-            int alas = (int)segitiga.sisi;
-            int tinggi = (int)segitiga.tinggi;
-            jTextFieldAlas.setText(Integer.toString(alas));
-            jTextFieldTinggi.setText(Integer.toString(tinggi));
+    void cek() {
+        if (prismaPersegi != null) {
+            jTextFieldSisi.setText(String.valueOf(prismaPersegi.sisi));
+            // tinggiPrisma is private
         }
     }
 }

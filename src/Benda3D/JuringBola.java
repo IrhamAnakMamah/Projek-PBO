@@ -44,7 +44,7 @@ public class JuringBola extends Bola implements Benda3D, Runnable {
         return (double)(theta/360) * super.getLuasPermukaanBola();
     }
 
-    public double getLuasPermukaanJuring() {
+    public double getLuasPermukaanJuringBola() {
         return luasPermukaanJuring;
     }
 

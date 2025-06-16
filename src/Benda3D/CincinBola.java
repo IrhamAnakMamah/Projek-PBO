@@ -50,4 +50,8 @@ public class CincinBola extends Bola implements Benda3D, Runnable{
         return luasPermukaanCincinBola;
     }
 
+    public double getVolumeCincinBola() {
+        return 0;
+    }
+
 }

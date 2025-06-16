@@ -13,9 +13,9 @@ public class LimasTrapesium extends Trapesium implements Benda3D, Runnable{
     private double volumeLimasTrapesium;
     private double luasPermukaanLimasTrapesium;
 
-    public LimasTrapesium(double sisiSejajar1, double tinggiSisiSejajar2, double tinggi, double tinggiSisiTegak1, double tinggiSisiTegak2) {
-        super(sisiSejajar1, tinggiSisiSejajar2, tinggi);
-        this.tinggiLimas = tinggi;
+    public LimasTrapesium(double sisiSejajar1, double SisiSejajar2, double tinggi, double tinggiLimas, double tinggiSisiTegak1, double tinggiSisiTegak2) {
+        super(sisiSejajar1, SisiSejajar2, tinggi);
+        this.tinggiLimas = tinggiLimas;
         this.tinggiSisiTegak1 = tinggiSisiTegak1;
         this.tinggiSisiTegak2 = tinggiSisiTegak2;
     }

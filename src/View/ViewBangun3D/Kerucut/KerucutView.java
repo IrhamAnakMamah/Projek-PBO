@@ -1,26 +1,26 @@
-package View.ViewBangun2D.Segitiga;
+package View.ViewBangun3D.Kerucut;
 
-import Benda2D.Segitiga;
+import Benda3D.Kerucut;
 import javax.swing.*;
 import java.awt.*;
 
-public class SegitigaView extends JFrame {
+public class KerucutView extends JFrame {
 
-    Segitiga segitiga;
+    Kerucut kerucut;
+    JTextField jTextFieldJari = new JTextField();
     JTextField jTextFieldTinggi = new JTextField();
-    JTextField jTextFieldAlas = new JTextField();
 
-    public SegitigaView() {
+    public KerucutView() {
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Kalkulator Segitiga");
+        setTitle("Kalkulator Kerucut");
     }
 
-    public SegitigaView(Segitiga segitiga) {
-        this.segitiga = segitiga;
+    public KerucutView(Kerucut kerucut) {
+        this.kerucut = kerucut;
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Kalkulator Segitiga");
+        setTitle("Kalkulator Kerucut");
     }
 
     private void initComponents() {
@@ -28,7 +28,7 @@ public class SegitigaView extends JFrame {
         setSize(500, 400);
         setLayout(null);
 
-        JLabel jLabelTitle = new JLabel("SEGITIGA");
+        JLabel jLabelTitle = new JLabel("KERUCUT");
         jLabelTitle.setFont(new Font("Tahoma", Font.BOLD, 30));
         jLabelTitle.setBounds(170, 20, 300, 37);
         add(jLabelTitle);
@@ -37,20 +37,18 @@ public class SegitigaView extends JFrame {
         jSeparator1.setBounds(0, 70, 500, 10);
         add(jSeparator1);
 
-        JLabel jLabelAlas = new JLabel("Alas (Sisi) :");
-        jLabelAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelAlas.setBounds(70, 100, 150, 25);
-        add(jLabelAlas);
+        JLabel jLabelJari = new JLabel("Jari-Jari Alas:");
+        jLabelJari.setFont(new Font("Tahoma", Font.BOLD, 14));
+        jLabelJari.setBounds(70, 100, 150, 25);
+        add(jLabelJari);
+        jTextFieldJari.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        jTextFieldJari.setBounds(230, 100, 200, 25);
+        add(jTextFieldJari);
 
-        jTextFieldAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldAlas.setBounds(230, 100, 200, 25);
-        add(jTextFieldAlas);
-
-        JLabel jLabelTinggi = new JLabel("Tinggi :");
+        JLabel jLabelTinggi = new JLabel("Tinggi Kerucut :");
         jLabelTinggi.setFont(new Font("Tahoma", Font.BOLD, 14));
         jLabelTinggi.setBounds(70, 140, 150, 25);
         add(jLabelTinggi);
-
         jTextFieldTinggi.setFont(new Font("Tahoma", Font.PLAIN, 14));
         jTextFieldTinggi.setBounds(230, 140, 200, 25);
         add(jTextFieldTinggi);
@@ -78,58 +76,39 @@ public class SegitigaView extends JFrame {
 
         jButtonsSave.addActionListener(e -> {
             try {
-                double alas = Double.parseDouble(jTextFieldAlas.getText());
+                double jari = Double.parseDouble(jTextFieldJari.getText());
                 double tinggi = Double.parseDouble(jTextFieldTinggi.getText());
-                if (alas <= 0 || tinggi <= 0) {
+                if (jari <= 0 || tinggi <= 0) {
                     throw new NumberFormatException("Input tidak boleh nol atau negatif!");
                 }
+                Kerucut newKerucut = new Kerucut(jari, tinggi); //
 
-                Segitiga segitiga = new Segitiga(alas, tinggi); //
-
-                // ==========================================================
-                // --- BAGIAN YANG DIUBAH ---
-                // ==========================================================
-
-                // 1. Jalankan thread untuk kalkulasi di background
-                Thread calcThread = new Thread(segitiga);
+                Thread calcThread = new Thread(newKerucut);
                 calcThread.start();
-
-                // 2. Tunggu sampai kalkulasi selesai sebelum menampilkan hasil
                 try {
                     calcThread.join();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
 
-                // 3. Tampilkan GUI Hasil
-                new HasilSegitigaView(segitiga).setVisible(true);
-
-                // ==========================================================
-                // --- AKHIR BAGIAN YANG DIUBAH ---
-                // ==========================================================
-
-                // Tutup window input ini
+                new HasilKerucutView(newKerucut).setVisible(true);
                 dispose();
-
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         jButtonReset.addActionListener(e -> {
-            jTextFieldAlas.setText("");
+            jTextFieldJari.setText("");
             jTextFieldTinggi.setText("");
         });
-
         jButtonClose.addActionListener(e -> dispose());
     }
 
-    void cek(){
-        if(segitiga != null){
-            int alas = (int)segitiga.sisi;
-            int tinggi = (int)segitiga.tinggi;
-            jTextFieldAlas.setText(Integer.toString(alas));
-            jTextFieldTinggi.setText(Integer.toString(tinggi));
+    void cek() {
+        if (kerucut != null) {
+            jTextFieldJari.setText(String.valueOf(kerucut.getJariJari()));
+            jTextFieldTinggi.setText(String.valueOf(kerucut.getTinggiKerucut()));
         }
     }
 }
