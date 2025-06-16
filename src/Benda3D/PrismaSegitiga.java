@@ -27,8 +27,25 @@ public class PrismaSegitiga extends Segitiga implements Benda3D, Runnable{
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         luasPermukaanPrismaSegitiga = hitungLuasPermukaan();
         luasSisiTegak = hitungLuasSisiTegak();
+    }
+
+    public double getTinggiPrismaSegitiga() {
+        return tinggiPrismaSegitiga;
+    }
+
+    public double getSisiA() {
+        return sisiA;
+    }
+
+    public double getSisiB() {
+        return sisiB;
+    }
+
+    public double getSisiC() {
+        return sisiC;
     }
 
     @Override

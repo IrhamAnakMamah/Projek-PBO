@@ -21,8 +21,13 @@ public class JuringBola extends Bola implements Benda3D, Runnable {
     @Override
     public void run() {
         System.out.println("Menghitung Juring Bola");
+        super.run();
         volumeJuringBola = hitungVolume();
         luasPermukaanJuring = hitungLuasPermukaan();
+    }
+
+    public double getTheta() {
+        return theta;
     }
 
     @Override

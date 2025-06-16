@@ -14,6 +14,7 @@ public class CincinBola extends Bola implements Benda3D, Runnable{
     private double volumeCincinBola;
     private double luasPermukaanCincinBola;
 
+
     public CincinBola(double jariJari, double jariJariDalam, double jarakDuaBidang) {
         super(jariJari);
         this.jarakDuaBidang = jarakDuaBidang;
@@ -22,7 +23,16 @@ public class CincinBola extends Bola implements Benda3D, Runnable{
     @Override
     public void run() {
         System.out.println("Hitung Cincin Bola");
+        super.run();
         luasPermukaanCincinBola = hitungLuasPermukaan();
+    }
+
+    public double getJariJariDalam() {
+        return jariJariDalam;
+    }
+
+    public double getJarakDuaBidang() {
+        return jarakDuaBidang;
     }
 
     @Override

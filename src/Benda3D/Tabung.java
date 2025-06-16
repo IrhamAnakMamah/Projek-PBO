@@ -22,8 +22,13 @@ public class Tabung extends Lingkaran implements Benda3D, Runnable{
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         volumeTabung = hitungVolume();
         luasPermukaanTabung = hitungLuasPermukaan();
+    }
+
+    public double getTinggiTabung() {
+        return tinggiTabung;
     }
 
     @Override

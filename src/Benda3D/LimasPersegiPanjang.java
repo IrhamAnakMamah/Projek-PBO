@@ -22,8 +22,13 @@ public class LimasPersegiPanjang extends PersegiPanjang implements Benda3D, Runn
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         volumeLimasPersegiPanjang = hitungVolume();
         luasPermukaanLimasPersegiPanjang = hitungLuasPermukaan();
+    }
+
+    public double getTinggiLimasPersegiPanjang() {
+        return tinggiLimasPersegiPanjang;
     }
 
     @Override

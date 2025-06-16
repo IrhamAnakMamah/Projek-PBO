@@ -22,8 +22,13 @@ public class PrismaPersegi extends Persegi implements Benda3D, Runnable {
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         volumeKubus = hitungVolume();
         luasPermukaanKubus = hitungLuasPermukaan();
+    }
+
+    public double getTinggiPrisma() {
+        return tinggiPrisma;
     }
 
     @Override

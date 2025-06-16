@@ -24,8 +24,13 @@ public class Kerucut extends Lingkaran implements Benda3D, Runnable {
     @Override
     public void run() {
         System.out.println("Menghitung Kerucut");
+        super.run();
         luasPermukaanKerucut = hitungLuasPermukaan();
         volumeKerucut = hitungVolume();
+    }
+
+    public double getTinggiKerucut() {
+        return tinggiKerucut;
     }
 
     @Override

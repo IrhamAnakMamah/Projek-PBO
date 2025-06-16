@@ -26,10 +26,19 @@ public class KerucutTerpancung extends Lingkaran implements Benda3D,Runnable {
     @Override
     public void run() {
         System.out.println("Menghitung Kerucut Terpancung");
+        super.run();
         garisPelukis = hitungGarisPelukis();
         luasSelimut = hitungLuasSelimut();
         volumeKerucutTerpancung = hitungVolume();
         luasPermukaanKerucutTerpancung = hitungLuasPermukaan();
+    }
+
+    public double getJariJariAtas() {
+        return jariJariAtas;
+    }
+
+    public double getTinggi() {
+        return tinggi;
     }
 
     @Override

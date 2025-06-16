@@ -19,8 +19,22 @@ public class LimasSegitiga extends Segitiga implements Benda3D,Runnable {
         super(alas, tinggi);
         this.tinggiLimasSegitiga = tinggiLimasSegitiga;
         totalSisi = sisi1 + sisi2 + sisi3;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Menghitung " + getNama());
+        super.run();
         volumeLimasSegitiga = hitungVolume();
         luasPermukaanLimasSegitiga = hitungLuasPermukaan();
+    }
+
+    public double getTotalSisi() {
+        return totalSisi;
+    }
+
+    public double getTinggiLimasSegitiga() {
+        return tinggiLimasSegitiga;
     }
 
     @Override

@@ -25,8 +25,17 @@ public class TemberengBola extends Bola implements Benda3D, Runnable{
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         volumeTemberengBola = hitungVolume();
         luasPermukaanTemberengBola = hitungLuasPermukaan();
+    }
+
+    public double getTheta() {
+        return theta;
+    }
+
+    public double getTinggiTembereng() {
+        return tinggiTembereng;
     }
 
     @Override

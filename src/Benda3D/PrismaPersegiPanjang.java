@@ -22,8 +22,13 @@ public class PrismaPersegiPanjang extends PersegiPanjang implements Benda3D,Runn
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         volumeBalok = hitungVolume();
         luasPermukaanBalok = hitungLuasPermukaan();
+    }
+
+    public double getTinggiBalok() {
+        return tinggiBalok;
     }
 
     @Override

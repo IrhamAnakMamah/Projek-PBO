@@ -22,8 +22,13 @@ public class LimasJajarGenjang extends JajarGenjang implements Benda3D, Runnable
     @Override
     public void run() {
         System.out.println("Menghitug " + getNama());
+        super.run();
         volumeLimasJajarGenjang = hitungVolume();
         luasPermukaanLimasJajarGenjang = hitungLuasPermukaan();
+    }
+
+    public double getTinggiLimas() {
+        return tinggiLimas;
     }
 
     @Override

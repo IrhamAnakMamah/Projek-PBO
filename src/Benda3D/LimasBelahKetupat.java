@@ -24,8 +24,17 @@ public class LimasBelahKetupat extends BelahKetupat implements Benda3D, Runnable
     @Override
     public void run() {
         System.out.println("Menghitung Limas Belah Ketupat");
+        super.run();
         volumeLimasBelahKetupat = hitungVolume();
         luasPermukaanLimasBelahKetupat = hitungLuas();
+    }
+
+    public double getTinggiLimas() {
+        return tinggiLimas;
+    }
+
+    public double getTinggiSisiTegak() {
+        return tinggiSisiTegak;
     }
 
     @Override

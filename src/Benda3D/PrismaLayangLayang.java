@@ -16,13 +16,19 @@ public class PrismaLayangLayang extends LayangLayang implements Benda3D, Runnabl
 
     public PrismaLayangLayang(double diagonal1, double diagonal2, double sisi1, double sisi2, double tinggiPrismaLayangLayang) {
         super(diagonal1, diagonal2, sisi1, sisi2);
+        this.tinggiPrismaLayangLayang = tinggiPrismaLayangLayang;
     }
 
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         this.volumePrismaLayangLayang = hitungVolume();
         this.luasPermukaanPrismaLayangLayang = hitungLuasPermukaan();
+    }
+
+    public double getTinggiPrismaLayangLayang() {
+        return tinggiPrismaLayangLayang;
     }
 
     @Override

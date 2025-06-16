@@ -21,8 +21,17 @@ public class PrismaJajarGenjang extends JajarGenjang implements Benda3D, Runnabl
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         volumePrismaJajarGenjang = hitungVolume();
         luasPermukaanPrismaJajarGenjang = hitungLuasPermukaan();
+    }
+
+    public double getTinggiPrismaJajarGenjang() {
+        return tinggiPrismaJajarGenjang;
+    }
+
+    public double getSisiPrismaJajarGenjang() {
+        return sisiPrismaJajarGenjang;
     }
 
     @Override

@@ -23,8 +23,21 @@ public class LimasLayangLayang extends LayangLayang implements Benda3D, Runnable
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
+        super.run();
         volumeLimasLayangLayang = hitungVolume();
         luasPermukaanLimasLayangLayang = hitungLuas();
+    }
+
+    public double getTinggiLimas() {
+        return tinggiLimas;
+    }
+
+    public double getTinggiSisiTegak1() {
+        return tinggiSisiTegak1;
+    }
+
+    public double getTinggiSisiTegak2() {
+        return tinggiSisiTegak2;
     }
 
     @Override

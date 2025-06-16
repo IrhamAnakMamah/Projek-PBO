@@ -20,6 +20,7 @@ public class TemberengLingkaran extends JuringLingkaran implements Runnable{
     @Override
     public void run() {
         System.out.println("Menghitung Tembereng Lingkaran");
+        super.run();
         KelilingTemberengLingkaran = hitungKeliling();
         luasTemberengLingkaran = hitungLuas();
     }

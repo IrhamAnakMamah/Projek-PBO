@@ -19,6 +19,7 @@ public class JuringLingkaran extends Lingkaran implements Runnable {
     @Override
     public void run() {
         System.out.println("Menghitung Juring Lingkaran");
+        super.run();
         luasJuringLingkaran = hitungLuas();
         kelilingJuringLingkaran = hitungKeliling();
     }
