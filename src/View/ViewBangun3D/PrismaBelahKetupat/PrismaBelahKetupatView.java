@@ -116,7 +116,10 @@ public class PrismaBelahKetupatView extends JFrame {
 
     void cek() {
         if (prisma != null) {
-            // properties private
+            jTextFieldD1.setText(Double.toString(prisma.diagonal1));
+            jTextFieldD2.setText(Double.toString(prisma.diagonal2));
+            jTextFieldSisi.setText(Double.toString(prisma.getSisiPrisma()));
+            jTextFieldTinggiPrisma.setText(Double.toString(prisma.getTinggiPrisma()));
         }
     }
 }

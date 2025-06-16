@@ -131,6 +131,7 @@ public class PrismaLayangLayangView extends JFrame {
             jTextFieldD2.setText(String.valueOf(prisma.diagonal2));
             jTextFieldSisi1.setText(String.valueOf(prisma.sisi1));
             jTextFieldSisi2.setText(String.valueOf(prisma.sisi2));
+            jTextFieldTinggiPrisma.setText(String.valueOf(prisma.getTinggiPrismaLayangLayang()));
         }
     }
 }

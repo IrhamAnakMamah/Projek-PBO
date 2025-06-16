@@ -120,7 +120,7 @@ public class PrismaPersegiPanjangView extends JFrame {
         if (balok != null) {
             jTextFieldPanjang.setText(String.valueOf(balok.panjang));
             jTextFieldLebar.setText(String.valueOf(balok.lebar));
-            // tinggiBalok is private
+            jTextFieldTinggi.setText(String.valueOf(balok.getTinggiBalok()));
         }
     }
 }

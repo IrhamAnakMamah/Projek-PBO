@@ -100,7 +100,8 @@ public class TemberengBolaView extends JFrame {
 
     void cek() {
         if (temberengBola != null) {
-            // properties private
+            jTextFieldJari.setText(String.valueOf(temberengBola.jariJari));
+            jTextFieldTinggi.setText(String.valueOf(temberengBola.getTinggiTembereng()));
         }
     }
 }

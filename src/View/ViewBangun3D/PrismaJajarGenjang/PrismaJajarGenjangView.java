@@ -119,14 +119,22 @@ public class PrismaJajarGenjangView extends JFrame {
         });
 
         jButtonReset.addActionListener(e -> {
-            // reset all fields
+            jTextFieldAlas.setText("");
+            jTextFieldTinggiAlas.setText("");
+            jTextFieldSudut.setText("");
+            jTextFieldTinggiPrisma.setText("");
+            jTextFieldSisi.setText("");
         });
         jButtonClose.addActionListener(e -> dispose());
     }
 
     void cek() {
         if (prisma != null) {
-            // properties private
+            jTextFieldAlas.setText(Double.toString(prisma.alas));
+            jTextFieldTinggiAlas.setText(Double.toString(prisma.tinggi));
+            jTextFieldSudut.setText(Double.toString(prisma.sudutLancip));
+            jTextFieldTinggiPrisma.setText(Double.toString(prisma.getTinggiPrismaJajarGenjang()));
+            jTextFieldSisi.setText(Double.toString(prisma.getSisiPrismaJajarGenjang()));
         }
     }
 }

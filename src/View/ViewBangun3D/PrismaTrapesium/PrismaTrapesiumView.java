@@ -94,21 +94,27 @@ public class PrismaTrapesiumView extends JFrame {
         jButtonClose.setBounds(335, 570, 100, 30);
         add(jButtonClose);
 
-        //cek();
+        cek();
 
         jButtonsSave.addActionListener(e -> {
             JOptionPane.showMessageDialog(null, "Constructor for this shape is complex (8 params). Please fill manually.", "Info", JOptionPane.INFORMATION_MESSAGE);
         });
 
         jButtonReset.addActionListener(e -> {
-            // reset all fields
+            jTextFieldAlasAtas.setText("");
+            jTextFieldAlasBawah.setText("");
+            jTextFieldTinggiAlas.setText("");
+            jTextFieldTinggiPrisma.setText("");
         });
         jButtonClose.addActionListener(e -> dispose());
     }
 
     void cek() {
         if (prisma != null) {
-            // properties public in parent class Trapesium, but sides A,B,C,D are private in Prisma
+            jTextFieldAlasAtas.setText(String.valueOf(prisma.sisiSejajar1));
+            jTextFieldAlasBawah.setText(String.valueOf(prisma.sisiSejajar2));
+            jTextFieldTinggiAlas.setText(String.valueOf(prisma.tinggi));
+            jTextFieldTinggiPrisma.setText(String.valueOf(prisma.getTinggiPrismaTrapesium()));
         }
     }
 }

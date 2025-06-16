@@ -108,7 +108,7 @@ public class TabungView extends JFrame {
     void cek() {
         if (tabung != null) {
             jTextFieldJari.setText(String.valueOf(tabung.getJariJari()));
-            // tinggiTabung is private, need getter
+            jTextFieldTinggi.setText(String.valueOf(tabung.getTinggiTabung()));
         }
     }
 }

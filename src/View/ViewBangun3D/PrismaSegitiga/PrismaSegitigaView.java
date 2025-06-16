@@ -110,7 +110,9 @@ public class PrismaSegitigaView extends JFrame {
 
     void cek() {
         if (prisma != null) {
-            // properties are private
+            jTextFieldAlas.setText(String.valueOf(prisma.sisi));
+            jTextFieldTinggiAlas.setText(String.valueOf(prisma.tinggi));
+            jTextFieldTinggiPrisma.setText(String.valueOf(prisma.getTinggiPrismaSegitiga()));
         }
     }
 }

@@ -108,7 +108,7 @@ public class PrismaPersegiView extends JFrame {
     void cek() {
         if (prismaPersegi != null) {
             jTextFieldSisi.setText(String.valueOf(prismaPersegi.sisi));
-            // tinggiPrisma is private
+            jTextFieldTinggi.setText(String.valueOf(prismaPersegi.getTinggiPrisma()));
         }
     }
 }
