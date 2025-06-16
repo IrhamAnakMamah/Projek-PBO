@@ -134,7 +134,6 @@ public class LimasSegitigaView extends JFrame {
                     ex.printStackTrace();
                 }
 
-                // LimasSegitiga tidak implement Runnable, jadi tidak perlu thread
                 new HasilLimasSegitigaView(newLimas).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {

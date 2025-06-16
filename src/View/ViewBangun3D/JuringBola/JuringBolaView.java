@@ -111,4 +111,8 @@ public class JuringBolaView extends JFrame {
             jTextFieldTheta.setText(String.valueOf(juringBola.getTheta()));
         }
     }
+
+    public static void main(String[] args) {
+        new JuringBolaView().setVisible(true);
+    }
 }

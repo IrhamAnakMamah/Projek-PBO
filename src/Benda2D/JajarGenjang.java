@@ -37,10 +37,12 @@ public class JajarGenjang extends Benda2D implements Runnable {
     }
 
     public double hitungLuas(double sisiPrisma) {
+
         return sisiPrisma * tinggi;
     }
 
     public double hitungLuas(double tinggiPrisma, double sisiPrisma) {
+
         return sisiPrisma * tinggiPrisma;
     }
 
