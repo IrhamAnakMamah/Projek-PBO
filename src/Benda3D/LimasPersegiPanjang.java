@@ -38,7 +38,7 @@ public class LimasPersegiPanjang extends PersegiPanjang implements Benda3D, Runn
 
     @Override
     public double hitungVolume() {
-        return (double)1/3 * getLuasPersegiPanjang() * tinggiLimasPersegiPanjang;
+        return (double)1.0/3.0 * getLuasPersegiPanjang() * tinggiLimasPersegiPanjang;
     }
 
     public double getVolumeLimasPersegiPanjang() {

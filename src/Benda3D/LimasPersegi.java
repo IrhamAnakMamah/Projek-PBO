@@ -38,7 +38,7 @@ public class LimasPersegi extends Persegi implements Benda3D, Runnable{
 
     @Override
     public double hitungVolume() {
-        return (double)1/3 * tinggiLimasPersegi * getLuasPersegi();
+        return (double)1.0/3.0 * tinggiLimasPersegi * getLuasPersegi();
     }
 
     public double getVolumeLimasPersegi() {

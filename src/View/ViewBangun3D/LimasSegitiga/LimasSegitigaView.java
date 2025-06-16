@@ -126,6 +126,14 @@ public class LimasSegitigaView extends JFrame {
                 }
                 LimasSegitiga newLimas = new LimasSegitiga(alas, tinggiAlas, tinggiLimas, s1, s2, s3); //
 
+                Thread calcThread = new Thread(newLimas);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 // LimasSegitiga tidak implement Runnable, jadi tidak perlu thread
                 new HasilLimasSegitigaView(newLimas).setVisible(true);
                 dispose();
@@ -135,7 +143,12 @@ public class LimasSegitigaView extends JFrame {
         });
 
         jButtonReset.addActionListener(e -> {
-            // reset all fields
+            jTextFieldAlas.setText("");
+            jTextFieldSisi1.setText("");
+            jTextFieldSisi2.setText("");
+            jTextFieldSisi3.setText("");
+            jTextFieldTinggiAlas.setText("");
+            jTextFieldTinggiLimas.setText("");
         });
         jButtonClose.addActionListener(e -> dispose());
     }

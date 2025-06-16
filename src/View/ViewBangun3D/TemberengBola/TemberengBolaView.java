@@ -84,6 +84,14 @@ public class TemberengBolaView extends JFrame {
                 }
                 TemberengBola newTb = new TemberengBola(r,t); //
 
+                Thread calcThread = new Thread(newTb);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilTemberengBolaView(newTb).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {

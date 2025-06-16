@@ -121,6 +121,14 @@ public class LimasTrapesiumView extends JFrame {
 
                 LimasTrapesium newLimas = new LimasTrapesium(s1, s2, ta, tl, ts1, ts2); //
 
+                Thread calcThread = new Thread(newLimas);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilLimasTrapesiumView(newLimas).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {
@@ -129,6 +137,12 @@ public class LimasTrapesiumView extends JFrame {
         });
 
         jButtonReset.addActionListener(e -> {
+            jTextFieldSisi1.setText("");
+            jTextFieldSisi2.setText("");
+            jTextFieldTinggiAlas.setText("");
+            jTextFieldTinggiLimas.setText("");
+            jTextFieldTinggiSisi1.setText("");
+            jTextFieldTinggiSisi2.setText("");
             // reset all fields
         });
         jButtonClose.addActionListener(e -> dispose());

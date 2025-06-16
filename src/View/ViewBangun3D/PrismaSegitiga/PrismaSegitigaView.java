@@ -93,6 +93,14 @@ public class PrismaSegitigaView extends JFrame {
                 }
                 PrismaSegitiga newPrisma = new PrismaSegitiga(a,ta,tp); //
 
+                Thread calcThread = new Thread(newPrisma);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilPrismaSegitigaView(newPrisma).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {

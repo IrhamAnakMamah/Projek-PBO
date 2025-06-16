@@ -104,6 +104,14 @@ public class LimasBelahKetupatView extends JFrame {
                 }
                 LimasBelahKetupat newLimas = new LimasBelahKetupat(d1, d2, tinggiLimas, tinggiSisi); //
 
+                Thread calcThread = new Thread(newLimas);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 // This class does not implement runnable, direct call
                 new HasilLimasBelahKetupatView(newLimas).setVisible(true);
                 dispose();
@@ -123,7 +131,10 @@ public class LimasBelahKetupatView extends JFrame {
 
     void cek() {
         if (limas != null) {
-            // All properties are private without getters
+            jTextFieldD1.setText(String.valueOf(limas.diagonal1));
+            jTextFieldD2.setText(String.valueOf(limas.diagonal2));
+            jTextFieldTinggiLimas.setText(String.valueOf(limas.getTinggiLimas()));
+            jTextFieldTinggiSisi.setText(String.valueOf(limas.getTinggiSisiTegak()));
         }
     }
 }

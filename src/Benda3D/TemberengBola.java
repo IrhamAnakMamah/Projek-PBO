@@ -45,7 +45,7 @@ public class TemberengBola extends Bola implements Benda3D, Runnable{
 
     @Override
     public double hitungVolume(){
-        return ((super.getPi() * Math.pow(tinggiTembereng, 2)) / 3) * (3 * super.getJariJari() - tinggiTembereng);
+        return ((super.getPi() * Math.pow(tinggiTembereng, 2)) / 3.0) * (3 * super.getJariJari() - tinggiTembereng);
     }
 
     public double getVolumeTemberengBola(){

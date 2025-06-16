@@ -44,7 +44,7 @@ public class LimasBelahKetupat extends BelahKetupat implements Benda3D, Runnable
 
     @Override
     public double hitungVolume() {
-        return (double)((double)1/3 * ((double)1/2 * super.diagonal1 * super.diagonal2) * tinggiLimas);
+        return (double)((double)1.0/3.0 * ((double)1.0/2.0 * super.diagonal1 * super.diagonal2) * tinggiLimas);
     }
 
     public double getVolumeLimasBelahKetupat() {

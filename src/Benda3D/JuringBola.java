@@ -23,6 +23,7 @@ public class JuringBola extends Bola implements Benda3D, Runnable {
         System.out.println("Menghitung Juring Bola");
         super.run();
         volumeJuringBola = hitungVolume();
+        System.out.println("Volume juring bola: " + volumeJuringBola);
         luasPermukaanJuring = hitungLuasPermukaan();
     }
 
@@ -37,11 +38,11 @@ public class JuringBola extends Bola implements Benda3D, Runnable {
 
     @Override
     public double hitungVolume() {
-        return (double)(theta/360) * super.getVolumeBola();
+        return (theta/360.0) * super.getVolumeBola();
     }
 
     public double hitungLuasPermukaan(){
-        return (double)(theta/360) * super.getLuasPermukaanBola();
+        return (theta/360.0) * super.getLuasPermukaanBola();
     }
 
     public double getLuasPermukaanJuringBola() {

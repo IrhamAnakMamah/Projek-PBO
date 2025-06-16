@@ -60,7 +60,7 @@ public class LimasSegitiga extends Segitiga implements Benda3D,Runnable {
 
     @Override
     public double hitungVolume() {
-        return (double)1/3 * (tinggiLimasSegitiga * getLuasSegitiga());
+        return (double)1.0/3.0 * (tinggiLimasSegitiga * getLuasSegitiga());
     }
 
     public double getVolumeLimasSegitiga() {

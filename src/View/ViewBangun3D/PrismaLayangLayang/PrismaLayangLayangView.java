@@ -111,6 +111,14 @@ public class PrismaLayangLayangView extends JFrame {
 
                 PrismaLayangLayang newPrisma = new PrismaLayangLayang(d1, d2, s1, s2, tp); //
 
+                Thread calcThread = new Thread(newPrisma);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilPrismaLayangLayangView(newPrisma).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {
@@ -119,6 +127,11 @@ public class PrismaLayangLayangView extends JFrame {
         });
 
         jButtonReset.addActionListener(e -> {
+            jTextFieldD1.setText("");
+            jTextFieldD2.setText("");
+            jTextFieldSisi1.setText("");
+            jTextFieldSisi2.setText("");
+            jTextFieldTinggiPrisma.setText("");
             // reset all fields
         });
         jButtonClose.addActionListener(e -> dispose());

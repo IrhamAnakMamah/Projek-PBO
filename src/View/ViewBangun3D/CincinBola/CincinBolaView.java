@@ -93,6 +93,14 @@ public class CincinBolaView extends JFrame {
                 }
                 CincinBola newCb = new CincinBola(rBesar, rKecil, jarak); //
 
+                Thread calcThread = new Thread(newCb);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilCincinBolaView(newCb).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {

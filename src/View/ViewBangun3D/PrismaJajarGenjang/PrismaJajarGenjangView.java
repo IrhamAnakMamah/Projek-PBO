@@ -111,6 +111,14 @@ public class PrismaJajarGenjangView extends JFrame {
 
                 PrismaJajarGenjang newPrisma = new PrismaJajarGenjang(a, ta, s, tp, sisi); //
 
+                Thread calcThread = new Thread(newPrisma);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilPrismaJajarGenjangView(newPrisma).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {

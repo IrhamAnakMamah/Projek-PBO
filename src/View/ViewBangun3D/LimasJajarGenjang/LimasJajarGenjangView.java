@@ -101,6 +101,14 @@ public class LimasJajarGenjangView extends JFrame {
 
                 LimasJajarGenjang newLimas = new LimasJajarGenjang(a, ta, s, tl);
 
+                Thread calcThread = new Thread(newLimas);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilLimasJajarGenjangView(newLimas).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {
@@ -109,6 +117,10 @@ public class LimasJajarGenjangView extends JFrame {
         });
 
         jButtonReset.addActionListener(e -> {
+            jTextFieldAlas.setText("");
+            jTextFieldTinggiAlas.setText("");
+            jTextFieldSudut.setText("");
+            jTextFieldTinggiLimas.setText("");
             // reset all fields
         });
         jButtonClose.addActionListener(e -> dispose());

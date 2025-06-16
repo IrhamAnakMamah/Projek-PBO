@@ -131,6 +131,14 @@ public class LimasLayangLayangView extends JFrame {
 
                 LimasLayangLayang newLimas = new LimasLayangLayang(d1, d2, s1, s2, tl, ts1, ts2);
 
+                Thread calcThread = new Thread(newLimas);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilLimasLayangLayangView(newLimas).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {
@@ -139,6 +147,13 @@ public class LimasLayangLayangView extends JFrame {
         });
 
         jButtonReset.addActionListener(e -> {
+            jTextFieldD1.setText("");
+            jTextFieldD2.setText("");
+            jTextFieldSisi1.setText("");
+            jTextFieldSisi2.setText("");
+            jTextFieldTinggiLimas.setText("");
+            jTextFieldTinggiSisi1.setText("");
+            jTextFieldTinggiSisi2.setText("");
             // reset all fields
         });
         jButtonClose.addActionListener(e -> dispose());

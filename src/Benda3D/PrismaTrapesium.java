@@ -7,37 +7,39 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ *
  */
 public class PrismaTrapesium extends Trapesium implements Benda3D, Runnable{
     private double tinggiPrismaTrapesium;
-    private double sisiA, sisiB, sisiC, sisiD;
+    private double sisiA, sisiB, sisiC, sisiD; // Sisi-sisi alas trapesium
     private double volumePrismaTrapesium;
     private double luasPermukaanPrismaTrapesium;
-    private double luasSisiTegak;
+    private double luasSisiTegak; // Untuk menyimpan hasil perhitungan luas sisi tegak
 
-    public PrismaTrapesium(double alasAtas, double alasBawah, double tinggi, double tinggiPrismaTrapesium, double sisiA, double sisiB, double sisiC, double sisiD) {
-        super(alasAtas,alasBawah,tinggi);
+    // Konstruktor dengan semua parameter yang dibutuhkan
+    public PrismaTrapesium(double alasAtas, double alasBawah, double tinggiAlas, double tinggiPrismaTrapesium, double sisiA, double sisiB, double sisiC, double sisiD) {
+        super(alasAtas,alasBawah,tinggiAlas); // alasAtas, alasBawah, tinggi adalah properti trapesium (alas)
         this.sisiA = sisiA;
         this.sisiB = sisiB;
         this.sisiC = sisiC;
         this.sisiD = sisiD;
         this.tinggiPrismaTrapesium = tinggiPrismaTrapesium;
-        this.luasSisiTegak = hitungLuasSisiTegak();
     }
 
     @Override
     public void run() {
         System.out.println("Menghitung " + getNama());
-        super.run();
-        volumePrismaTrapesium = hitungVolume();
-        luasPermukaanPrismaTrapesium = hitungLuasPermukaan();
+        super.run(); // Menghitung luas dan keliling trapesium alas
+        this.luasSisiTegak = hitungLuasSisiTegak(); // Hitung luas sisi tegak setelah sisi-sisi diinisialisasi
+        this.volumePrismaTrapesium = hitungVolume();
+        this.luasPermukaanPrismaTrapesium = hitungLuasPermukaan();
     }
 
     public double getTinggiPrismaTrapesium() {
         return tinggiPrismaTrapesium;
     }
 
+    // Menambahkan getter untuk sisi-sisi alas agar bisa diakses dari View
     public double getSisiA() {
         return sisiA;
     }
@@ -65,11 +67,14 @@ public class PrismaTrapesium extends Trapesium implements Benda3D, Runnable{
 
     @Override
     public double hitungVolume(){
+        // Volume Prisma = Luas Alas * Tinggi Prisma
         return super.hitungLuas() * tinggiPrismaTrapesium;
     }
 
+    // Perbaikan rumus hitungLuasSisiTegak() - seharusnya keliling alas * tinggi prisma
+    // Keliling alas sudah ada di super.getKelilingTrapesium()
     public double hitungLuasSisiTegak(){
-        return sisiA + sisiB + sisiC + sisiD * tinggiPrismaTrapesium;
+        return super.getKelilingTrapesium() * tinggiPrismaTrapesium;
     }
 
     public double getVolumePrismaTrapesium() {
@@ -78,6 +83,7 @@ public class PrismaTrapesium extends Trapesium implements Benda3D, Runnable{
 
     @Override
     public double hitungLuasPermukaan(){
+        // Luas Permukaan Prisma = (2 * Luas Alas) + Luas Selimut (Luas Sisi Tegak)
         return (2 * super.getLuasTrapesium()) + luasSisiTegak;
     }
 

@@ -40,7 +40,7 @@ public class Kerucut extends Lingkaran implements Benda3D, Runnable {
 
     @Override
     public double hitungVolume() {
-        return (double)1/3 * getLuasLingkaran() * tinggiKerucut;
+        return (double)1.0/3.0 * getLuasLingkaran() * tinggiKerucut;
     }
 
     public double getVolumeKerucut() {

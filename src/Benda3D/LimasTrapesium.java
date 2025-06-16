@@ -47,7 +47,7 @@ public class LimasTrapesium extends Trapesium implements Benda3D, Runnable{
 
     @Override
     public double hitungVolume() {
-        return (double)1/3 * getLuasTrapesium() * tinggiLimas;
+        return (double)1.0/3.0 * getLuasTrapesium() * tinggiLimas;
     }
 
     public double getVolumeLimasTrapesium() {
@@ -60,7 +60,7 @@ public class LimasTrapesium extends Trapesium implements Benda3D, Runnable{
     }
 
     public double getLuasPermukaanLimasTrapesium() {
-        return 0;
+        return luasPermukaanLimasTrapesium;
     }
 
 }

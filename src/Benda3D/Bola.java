@@ -22,6 +22,7 @@ public class Bola extends Lingkaran implements Benda3D,Runnable {
         System.out.println("Menghitung Bola");
         super.run();
         volumeBola = hitungVolume();
+        System.out.println("Volume Bola: " + 4.0/3.0);
         luasPermukaanBola = hitungLuasPermukaan();
     }
 
@@ -32,7 +33,7 @@ public class Bola extends Lingkaran implements Benda3D,Runnable {
 
     @Override
     public double hitungVolume() {
-        return (double)(4/3 * getLuasLingkaran() * jariJari);
+        return (4.0/3.0 * getLuasLingkaran() * jariJari);
     }
 
     public double getVolumeBola() {

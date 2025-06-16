@@ -83,6 +83,14 @@ public class JuringBolaView extends JFrame {
                 }
                 JuringBola newJb = new JuringBola(r,t); //
 
+                Thread calcThread = new Thread(newJb);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilJuringBolaView(newJb).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {

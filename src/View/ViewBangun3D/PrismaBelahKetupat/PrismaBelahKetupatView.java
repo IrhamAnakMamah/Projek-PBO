@@ -101,6 +101,14 @@ public class PrismaBelahKetupatView extends JFrame {
 
                 PrismaBelahKetupat newPrisma = new PrismaBelahKetupat(d1, d2, tp, sisi); //
 
+                Thread calcThread = new Thread(newPrisma);
+                calcThread.start();
+                try {
+                    calcThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 new HasilPrismaBelahKetupatView(newPrisma).setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {
@@ -109,17 +117,24 @@ public class PrismaBelahKetupatView extends JFrame {
         });
 
         jButtonReset.addActionListener(e -> {
+            jTextFieldD1.setText("");
+            jTextFieldD2.setText("");
+            jTextFieldTinggiPrisma.setText("");
+            jTextFieldSisi.setText("");
             // reset all fields
         });
         jButtonClose.addActionListener(e -> dispose());
     }
 
     void cek() {
+        System.out.println("masuk cek");
         if (prisma != null) {
+            System.out.println("masuk if");
             jTextFieldD1.setText(Double.toString(prisma.diagonal1));
             jTextFieldD2.setText(Double.toString(prisma.diagonal2));
             jTextFieldSisi.setText(Double.toString(prisma.getSisiPrisma()));
             jTextFieldTinggiPrisma.setText(Double.toString(prisma.getTinggiPrisma()));
         }
     }
+
 }
