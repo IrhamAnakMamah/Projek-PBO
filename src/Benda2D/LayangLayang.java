@@ -5,27 +5,22 @@ import Benda.Benda2D;
 /**
  * 
  */
-public class LayangLayang extends Benda2D implements Runnable {
+public class LayangLayang extends Benda2D{
 
     public double diagonal1;
     public double diagonal2;
     public double sisi1;
     public double sisi2;
-    private double luasLayangLayang;
-    private double kelilingLayangLayang;
+    protected double luasLayangLayang;
+    protected double kelilingLayangLayang;
 
     public LayangLayang(double diagonal1, double diagonal2, double sisi1, double sisi2) {
         this.diagonal1 = diagonal1;
         this.diagonal2 = diagonal2;
         this.sisi1 = sisi1;
         this.sisi2 = sisi2;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Layang-Layang");
-        luasLayangLayang = hitungLuas();
-        kelilingLayangLayang = hitungKeliling();
+        this.kelilingLayangLayang = hitungKeliling();
+        this.luasLayangLayang = hitungLuas();
     }
 
     @Override
@@ -35,7 +30,13 @@ public class LayangLayang extends Benda2D implements Runnable {
 
     @Override
     public double hitungLuas() {
-        return 0.5 * diagonal1 * diagonal2;
+        luasLayangLayang = 0.5 * diagonal1 * diagonal2;
+        return luasLayangLayang;
+    }
+
+    public double hitungLuas(double diagonal1Baru, double diagonal2Baru) {
+        luasLayangLayang = 0.5 * diagonal1Baru * diagonal2Baru;
+        return luasLayangLayang;
     }
 
     public double getLuasLayangLayang() {
@@ -44,7 +45,13 @@ public class LayangLayang extends Benda2D implements Runnable {
 
     @Override
     public double hitungKeliling() {
-        return 2 * (diagonal1 + diagonal2);
+        kelilingLayangLayang = 2 * (diagonal1 + diagonal2);
+        return kelilingLayangLayang;
+    }
+
+    public double hitungKeliling(double diagonal1Baru, double diagonal2Baru) {
+        kelilingLayangLayang = 2 * (diagonal1Baru + diagonal2Baru);
+        return kelilingLayangLayang;
     }
 
     public double getKelilingLayangLayang() {

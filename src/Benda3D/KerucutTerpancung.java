@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 
  */
-public class KerucutTerpancung extends Lingkaran implements Benda3D,Runnable {
+public class KerucutTerpancung extends Lingkaran implements Benda3D{
     private double jariJariAtas;
     private double garisPelukis;
     private double tinggi;
@@ -21,16 +21,10 @@ public class KerucutTerpancung extends Lingkaran implements Benda3D,Runnable {
         super(jariJari);
         this.jariJariAtas = jariJariAtas;
         this.tinggi = tinggi;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Kerucut Terpancung");
-        super.run();
-        garisPelukis = hitungGarisPelukis();
-        luasSelimut = hitungLuasSelimut();
-        volumeKerucutTerpancung = hitungVolume();
-        luasPermukaanKerucutTerpancung = hitungLuasPermukaan();
+        this.volumeKerucutTerpancung = hitungVolume();
+        this.luasPermukaanKerucutTerpancung = hitungLuasPermukaan();
+        this.luasSelimut = hitungLuasSelimut();
+        this.garisPelukis = hitungGarisPelukis();
     }
 
     public double getJariJariAtas() {
@@ -48,20 +42,29 @@ public class KerucutTerpancung extends Lingkaran implements Benda3D,Runnable {
 
     @Override
     public double hitungVolume() {
-        return ((1.0/3.0) * super.pi * tinggi) * (jariJariAtas * jariJariAtas + super.jariJari * super.jariJari + jariJariAtas * super.jariJari);
+        volumeKerucutTerpancung = ((1.0/3.0) * super.pi * tinggi) * (jariJariAtas * jariJariAtas + super.jariJari * super.jariJari + jariJariAtas * super.jariJari);
+        return volumeKerucutTerpancung;
+    }
+
+    public double hitungVolume(double jariJariAtasBaru, double tinggiBaru) {
+        volumeKerucutTerpancung = ((1.0/3.0) * super.pi * tinggiBaru) * (jariJariAtasBaru * jariJariAtasBaru + super.jariJari * super.jariJari + jariJariAtasBaru * super.jariJari);
+        return volumeKerucutTerpancung;
     }
 
     @Override
     public double hitungLuasPermukaan() {
-        return luasSelimut + super.getKelilingLingkaran() + (super.pi * Math.pow(jariJariAtas, 2));
+        luasPermukaanKerucutTerpancung = luasSelimut + super.getKelilingLingkaran() + (super.pi * Math.pow(jariJariAtas, 2));
+        return luasPermukaanKerucutTerpancung;
     }
 
     public double hitungLuasSelimut() {
-        return super.pi * (super.jariJari + jariJariAtas) * garisPelukis;
+        luasSelimut = super.pi * (super.jariJari + jariJariAtas) * garisPelukis;
+        return luasSelimut;
     }
 
     public double hitungGarisPelukis(){
-        return Math.sqrt(Math.pow(super.jariJari - jariJariAtas, 2) + Math.pow(tinggi, 2));
+        garisPelukis = Math.sqrt(Math.pow(super.jariJari - jariJariAtas, 2) + Math.pow(tinggi, 2));
+        return garisPelukis;
     }
 
     public double getLuasPermukaanKerucutTerpancung() {

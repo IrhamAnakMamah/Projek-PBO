@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * 
  */
-public class JuringBola extends Bola implements Benda3D, Runnable {
+public class JuringBola extends Bola implements Benda3D{
     private double theta;
     private double volumeJuringBola;
     private double luasPermukaanJuring;
@@ -16,15 +16,8 @@ public class JuringBola extends Bola implements Benda3D, Runnable {
     public JuringBola(double jariJari, double theta) {
         super(jariJari);
         this.theta = theta;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Juring Bola");
-        super.run();
-        volumeJuringBola = this.hitungVolume();
-        System.out.println("Volume juring bola: " + getVolumeBola());
-        luasPermukaanJuring = this.hitungLuasPermukaan();
+        this.volumeJuringBola = hitungVolume();
+        this.luasPermukaanJuring = hitungLuasPermukaan();
     }
 
     public double getTheta() {
@@ -38,11 +31,23 @@ public class JuringBola extends Bola implements Benda3D, Runnable {
 
     @Override
     public double hitungVolume() {
-        return (theta/360.0) * super.getVolumeBola();
+        volumeJuringBola = (theta/360.0) * super.hitungVolume();
+        return volumeJuringBola;
+    }
+
+    public double hitungVolume(double thetaBaru, double jariJariBaru) {
+        volumeJuringBola = (thetaBaru/360.0) * super.hitungVolume(jariJariBaru);
+        return volumeJuringBola;
     }
 
     public double hitungLuasPermukaan(){
-        return (theta/360.0) * super.getLuasPermukaanBola();
+        luasPermukaanJuring = (theta/360.0) * super.hitungLuasPermukaan();
+        return luasPermukaanJuring;
+    }
+
+    public double hitungLuasPermukaan(double thetaBaru, double jariJariBaru){
+        luasPermukaanJuring = (thetaBaru/360.0) * super.hitungLuasPermukaan(jariJariBaru);
+        return luasPermukaanJuring;
     }
 
     public double getLuasPermukaanJuringBola() {

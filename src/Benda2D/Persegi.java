@@ -5,29 +5,16 @@ import Benda.Benda2D;
 /**
  * 
  */
-public class Persegi extends Benda2D implements Runnable {
+public class Persegi extends Benda2D {
 
     public double sisi;
-    private double luasPersegi;
-    private double kelilingPersegi;
+    protected double luasPersegi;
+    protected double kelilingPersegi;
 
     public Persegi(double sisi) {
         this.sisi = sisi;
-        System.out.println("sisi = " + sisi);
-        try{
-            if(sisi <= 0){
-                throw new ArithmeticException();
-            }
-        }catch(ArithmeticException e){
-            System.out.println("Error : " + e.getLocalizedMessage());
-        }
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Persegi");
-        luasPersegi = hitungLuas();
-        kelilingPersegi = hitungKeliling();
+        this.luasPersegi = hitungLuas();
+        this.kelilingPersegi = hitungKeliling();
     }
 
     @Override
@@ -37,10 +24,11 @@ public class Persegi extends Benda2D implements Runnable {
 
     @Override
     public double hitungLuas() {
-        return sisi * sisi;
+        luasPersegi = sisi * sisi;
+        return luasPersegi;
     }
 
-    public double hitungLuas(double sisi){
+    public double hitungLuas(double sisiBaru){
         luasPersegi = sisi * sisi;
         return luasPersegi;
     }
@@ -51,7 +39,13 @@ public class Persegi extends Benda2D implements Runnable {
 
     @Override
     public double hitungKeliling() {
-        return 4 * sisi;
+        kelilingPersegi = 4 * sisi;
+        return kelilingPersegi;
+    }
+
+    public double hitungKeliling(double sisiBaru) {
+        kelilingPersegi = 4 * sisiBaru;
+        return kelilingPersegi;
     }
 
     public double getKelilingPersegi() {

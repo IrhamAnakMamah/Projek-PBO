@@ -5,7 +5,7 @@ import Benda.Benda2D;
 /**
  * 
  */
-public class Trapesium extends Benda2D implements Runnable {
+public class Trapesium extends Benda2D{
     public double sisiSejajar1;
     public double sisiSejajar2;
     public double tinggi;
@@ -18,13 +18,8 @@ public class Trapesium extends Benda2D implements Runnable {
         this.sisiSejajar2 = sisiSejajar2;
         this.tinggi = tinggi;
         this.sisiMiring = 0;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Trapesium");
-        this.luasTrapesium = hitungLuas();
         this.kelilingTrapesium = hitungKeliling();
+        this.luasTrapesium = hitungLuas();
     }
 
     @Override
@@ -34,7 +29,13 @@ public class Trapesium extends Benda2D implements Runnable {
 
     @Override
     public double hitungLuas() {
-        return 0.5 * (sisiSejajar1 * sisiSejajar2) * tinggi;
+        luasTrapesium = 0.5 * (sisiSejajar1 * sisiSejajar2) * tinggi;
+        return luasTrapesium;
+    }
+
+    public double hitungLuas(double sisiSejajar1Baru, double sisiSejajar2Baru, double tinggiBaru) {
+        luasTrapesium = 0.5 * (sisiSejajar1Baru * sisiSejajar2Baru) * tinggiBaru;
+        return luasTrapesium;
     }
 
     public double getLuasTrapesium() {
@@ -43,7 +44,13 @@ public class Trapesium extends Benda2D implements Runnable {
 
     @Override
     public double hitungKeliling() {
-        return 2 * (sisiSejajar1 + sisiSejajar2);
+        kelilingTrapesium = 2 * (sisiSejajar1 + sisiSejajar2);
+        return kelilingTrapesium;
+    }
+
+    public double hitungKeliling(double sisiSejajar1Baru, double sisiSejajar2Baru) {
+        kelilingTrapesium = 2 * (sisiSejajar1Baru + sisiSejajar2Baru);
+        return kelilingTrapesium;
     }
 
     public double getKelilingTrapesium() {

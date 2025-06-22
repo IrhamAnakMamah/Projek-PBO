@@ -5,25 +5,21 @@ import Benda.Benda2D;
 /**
  * 
  */
-public class JajarGenjang extends Benda2D implements Runnable {
+public class JajarGenjang extends Benda2D{
 
     public double alas;
     public double tinggi;
     public double sudutLancip;
-    private double luasJajarGenjang;
-    private double kelilingJajarGenjang;
-    private double sisiMiringJajarGenjang;
+    protected double luasJajarGenjang;
+    protected double kelilingJajarGenjang;
+    protected double sisi;
 
     public JajarGenjang(double alas, double tinggi, double sudutLancip) {
         this.alas = alas;
         this.tinggi = tinggi;
         this.sudutLancip = sudutLancip;
-    }
-    @Override
-    public void run() {
-        System.out.println("Menghitung Jajar Genjang");
-        this.luasJajarGenjang = hitungLuas();
         this.kelilingJajarGenjang = hitungKeliling();
+        this.luasJajarGenjang = hitungLuas();
     }
 
     @Override
@@ -33,17 +29,13 @@ public class JajarGenjang extends Benda2D implements Runnable {
 
     @Override
     public double hitungLuas() {
-        return alas * tinggi;
+        luasJajarGenjang = alas * tinggi;
+        return luasJajarGenjang;
     }
 
-    public double hitungLuas(double sisiPrisma) {
-
-        return sisiPrisma * tinggi;
-    }
-
-    public double hitungLuas(double tinggiPrisma, double sisiPrisma) {
-
-        return sisiPrisma * tinggiPrisma;
+    public double hitungLuas(double alasBaru, double tinggiBaru) {
+        luasJajarGenjang = alasBaru * tinggiBaru;
+        return luasJajarGenjang;
     }
 
     public double getLuasJajarGenjang() {
@@ -52,11 +44,13 @@ public class JajarGenjang extends Benda2D implements Runnable {
 
     @Override
     public double hitungKeliling() {
-        return 2 * (alas + tinggi);
+        kelilingJajarGenjang = 2 * (alas + sisi);
+        return kelilingJajarGenjang;
     }
 
-    public double getSisiMiringJajarGenjang() {
-        return 0;
+    public double hitungKeliling(double alasBaru, double sisiBaru) {
+        kelilingJajarGenjang = 2 * (alasBaru + sisiBaru);
+        return kelilingJajarGenjang;
     }
 
     public double getKelilingJajarGenjang() {

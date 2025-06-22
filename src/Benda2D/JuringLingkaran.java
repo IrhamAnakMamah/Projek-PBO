@@ -6,22 +6,16 @@ import java.util.*;
 /**
  * 
  */
-public class JuringLingkaran extends Lingkaran implements Runnable {
+public class JuringLingkaran extends Lingkaran{
     public double sudut;
-    private double luasJuringLingkaran;
     private double kelilingJuringLingkaran;
+    private double luasJuringLingkaran;
 
     public JuringLingkaran(double jariJari, double sudut) {
         super(jariJari);
         this.sudut = sudut;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Juring Lingkaran");
-        super.run();
-        luasJuringLingkaran = hitungLuas();
-        kelilingJuringLingkaran = hitungKeliling();
+        this.kelilingJuringLingkaran = hitungKeliling();
+        this.luasJuringLingkaran = hitungLuas();
     }
 
     @Override
@@ -31,7 +25,13 @@ public class JuringLingkaran extends Lingkaran implements Runnable {
 
     @Override
     public double hitungLuas() {
-        return getLuasLingkaran() * sudut;
+        luasJuringLingkaran = (sudut/360.0) * super.hitungLuas();
+        return luasJuringLingkaran;
+    }
+
+    public double hitungLuas(double jarijariBaru, double sudutBaru) {
+        luasJuringLingkaran = (sudutBaru/360.0) * super.hitungLuas(jarijariBaru);
+        return luasJuringLingkaran;
     }
 
     public double getLuasJuringLingkaran() {
@@ -40,7 +40,13 @@ public class JuringLingkaran extends Lingkaran implements Runnable {
 
     @Override
     public double hitungKeliling() {
-        return 2 * jariJari + jariJari * sudut;
+        kelilingJuringLingkaran = (sudut / 360.0) * super.hitungKeliling() + 2 * super.jariJari;
+        return kelilingJuringLingkaran;
+    }
+
+    public double hitungKeliling(double jariJariBaru, double sudutBaru) {
+        kelilingJuringLingkaran = (sudutBaru / 360.0) * super.hitungKeliling(jariJariBaru) + 2 * jariJariBaru;
+        return kelilingJuringLingkaran;
     }
 
     public double getKelilingJuringLingkaran() {

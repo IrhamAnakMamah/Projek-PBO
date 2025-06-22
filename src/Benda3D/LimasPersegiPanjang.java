@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 
  */
-public class LimasPersegiPanjang extends PersegiPanjang implements Benda3D, Runnable {
+public class LimasPersegiPanjang extends PersegiPanjang implements Benda3D{
     public double volumeLimasPersegiPanjang;
     public double tinggiLimasPersegiPanjang;
     public double luasPermukaanLimasPersegiPanjang;
@@ -17,14 +17,8 @@ public class LimasPersegiPanjang extends PersegiPanjang implements Benda3D, Runn
     public LimasPersegiPanjang(double panjang, double lebar, double tinggiLimasPersegiPanjang) {
         super(panjang, lebar);
         this.tinggiLimasPersegiPanjang = tinggiLimasPersegiPanjang;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run();
-        volumeLimasPersegiPanjang = hitungVolume();
-        luasPermukaanLimasPersegiPanjang = hitungLuasPermukaan();
+        this.volumeLimasPersegiPanjang = hitungVolume();
+        this.luasPermukaanLimasPersegiPanjang = hitungLuasPermukaan();
     }
 
     public double getTinggiLimasPersegiPanjang() {
@@ -38,7 +32,13 @@ public class LimasPersegiPanjang extends PersegiPanjang implements Benda3D, Runn
 
     @Override
     public double hitungVolume() {
-        return (double)1.0/3.0 * getLuasPersegiPanjang() * tinggiLimasPersegiPanjang;
+        volumeLimasPersegiPanjang = (double)1.0/3.0 * super.luasPersegiPanjang * tinggiLimasPersegiPanjang;
+        return volumeLimasPersegiPanjang;
+    }
+
+    public double hitungVolume(double panjangBaru, double lebarBaru, double tinggiBaru) {
+        volumeLimasPersegiPanjang = (double)1.0/3.0 * panjangBaru * lebarBaru * tinggiBaru;
+        return volumeLimasPersegiPanjang;
     }
 
     public double getVolumeLimasPersegiPanjang() {
@@ -47,7 +47,17 @@ public class LimasPersegiPanjang extends PersegiPanjang implements Benda3D, Runn
 
     @Override
     public double hitungLuasPermukaan() {
-        return getLuasPersegiPanjang() + (super.panjang * tinggiLimasPersegiPanjang) + (super.lebar * tinggiLimasPersegiPanjang);
+        double panjang = super.panjang;
+        double lebar = super.lebar;
+
+        double tinggiSegitigaPanjang = Math.sqrt(Math.pow(tinggiLimasPersegiPanjang, 2) + Math.pow(lebar / 2, 2));
+        double tinggiSegitigaLebar = Math.sqrt(Math.pow(tinggiLimasPersegiPanjang, 2) + Math.pow(panjang / 2, 2));
+
+        double luasSisiPanjang = panjang * tinggiSegitigaPanjang;
+        double luasSisiLebar = lebar * tinggiSegitigaLebar;
+
+        luasPermukaanLimasPersegiPanjang =  super.luasPersegiPanjang + 2 * (0.5 * luasSisiPanjang) + 2 * (0.5 * luasSisiLebar);
+        return luasPermukaanLimasPersegiPanjang;
     }
 
     public double getLuasPermukaanLimasPersegiPanjang() {

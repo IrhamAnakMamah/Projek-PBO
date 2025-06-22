@@ -2,25 +2,17 @@ package Benda2D;
 
 import Benda.Benda2D;
 
-/**
- * 
- */
-public class Lingkaran extends Benda2D implements Runnable{
+public class Lingkaran extends Benda2D{
 
     public double jariJari;
-    private double luasLingkaran;
-    private double kelilingLingkaran;
     public final double pi = Math.PI;
+    protected double luasLingkaran;
+    protected double kelilingLingkaran;
 
     public Lingkaran(double jariJari) {
         this.jariJari = jariJari;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Lingkaran");
-        luasLingkaran = hitungLuas();
-        kelilingLingkaran = hitungKeliling();
+        this.kelilingLingkaran = hitungKeliling();
+        this.luasLingkaran = hitungLuas();
     }
 
     @Override
@@ -30,12 +22,24 @@ public class Lingkaran extends Benda2D implements Runnable{
 
     @Override
     public double hitungLuas() {
-        return pi * jariJari * jariJari;
+        luasLingkaran = pi * jariJari * jariJari;
+        return luasLingkaran;
+    }
+
+    public double hitungLuas(double jariJariBaru) {
+        luasLingkaran = pi * jariJariBaru * jariJariBaru;
+        return luasLingkaran;
     }
 
     @Override
     public double hitungKeliling() {
-        return 2 * pi * jariJari;
+        kelilingLingkaran = 2 * pi * jariJari;
+        return kelilingLingkaran;
+    }
+
+    public double hitungKeliling(double jariJariBaru) {
+        kelilingLingkaran = 2 * pi * jariJariBaru;
+        return kelilingLingkaran;
     }
 
     public double getJariJari() {

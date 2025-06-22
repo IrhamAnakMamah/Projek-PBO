@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 
  */
-public class LimasBelahKetupat extends BelahKetupat implements Benda3D, Runnable{
+public class LimasBelahKetupat extends BelahKetupat implements Benda3D{
     private double volumeLimasBelahKetupat;
     private double luasPermukaanLimasBelahKetupat;
     private double tinggiLimas;
@@ -19,14 +19,8 @@ public class LimasBelahKetupat extends BelahKetupat implements Benda3D, Runnable
         super(diagonal1, diagonal2);
         this.tinggiLimas = tinggiBelahKetupat;
         this.tinggiSisiTegak = tinggiSisiTegak;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Limas Belah Ketupat");
-        super.run();
-        volumeLimasBelahKetupat = hitungVolume();
-        luasPermukaanLimasBelahKetupat = hitungLuas();
+        this.volumeLimasBelahKetupat = hitungVolume();
+        this.kelilingBelahKetupat = hitungLuasPermukaan();
     }
 
     public double getTinggiLimas() {
@@ -44,7 +38,13 @@ public class LimasBelahKetupat extends BelahKetupat implements Benda3D, Runnable
 
     @Override
     public double hitungVolume() {
-        return (double)((double)1.0/3.0 * ((double)1.0/2.0 * super.diagonal1 * super.diagonal2) * tinggiLimas);
+        volumeLimasBelahKetupat = (double)((double)1.0/3.0 * ((double)1.0/2.0 * super.diagonal1 * super.diagonal2) * tinggiLimas);
+        return volumeLimasBelahKetupat;
+    }
+
+    public double hitungVolume(double diagonal1Baru, double diagonal2Baru, double tinggiLimasBaru) {
+        volumeLimasBelahKetupat = (double)((double)1.0/3.0 * ((double)1.0/2.0 * diagonal1Baru * diagonal2Baru) * tinggiLimasBaru);
+        return volumeLimasBelahKetupat;
     }
 
     public double getVolumeLimasBelahKetupat() {
@@ -53,7 +53,13 @@ public class LimasBelahKetupat extends BelahKetupat implements Benda3D, Runnable
 
     @Override
     public double hitungLuasPermukaan() {
-        return 2 * diagonal1 + getKelilingBelahKetupat() * tinggiLimas;
+        luasPermukaanLimasBelahKetupat = 2 * diagonal1 + getKelilingBelahKetupat() * tinggiLimas;
+        return luasPermukaanLimasBelahKetupat;
+    }
+
+    public double hitungLuasPermukaan(double diagonal1Baru, double diagonal2Baru, double tinggiLimasBaru) {
+        luasPermukaanLimasBelahKetupat = 2 * diagonal1Baru + super.hitungKeliling(diagonal1Baru, diagonal2Baru) * tinggiLimasBaru;
+        return luasPermukaanLimasBelahKetupat;
     }
 
     public double getLuasPermukaanBelahKetupat() {

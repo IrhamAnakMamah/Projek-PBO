@@ -9,21 +9,14 @@ import java.util.*;
 /**
  * 
  */
-public class Bola extends Lingkaran implements Benda3D,Runnable {
+public class Bola extends Lingkaran implements Benda3D {
     private double volumeBola;
     private double luasPermukaanBola;
 
     public Bola(double jariJari) {
         super(jariJari);
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Bola");
-        super.run();
-        volumeBola = this.hitungVolume();
-        System.out.println("Volume Bola: " + volumeBola);
-        luasPermukaanBola = this.hitungLuasPermukaan();
+        this.volumeBola = hitungVolume();
+        this.luasPermukaanBola = hitungLuasPermukaan();
     }
 
     @Override
@@ -32,8 +25,14 @@ public class Bola extends Lingkaran implements Benda3D,Runnable {
     }
 
     @Override
-    public double hitungVolume() {
-        return 4.0/3.0 * getLuasLingkaran() * jariJari;
+    public double hitungVolume(){
+        volumeBola = 4.0/3.0 * super.luasLingkaran * super.jariJari;
+        return volumeBola;
+    }
+
+    public double hitungVolume(double jariJariBaru) {
+        volumeBola = 4.0/3.0 * pi * super.hitungLuas(jariJariBaru) * jariJari;
+        return volumeBola;
     }
 
     public double getVolumeBola() {
@@ -42,7 +41,13 @@ public class Bola extends Lingkaran implements Benda3D,Runnable {
 
     @Override
     public double hitungLuasPermukaan() {
-        return getKelilingLingkaran() * super.jariJari * 2;
+        luasPermukaanBola = 4 * super.luasLingkaran;
+        return luasPermukaanBola;
+    }
+
+    public double hitungLuasPermukaan(double jariJariBaru) {
+        luasPermukaanBola = 4 * super.hitungLuas(jariJariBaru);
+        return luasPermukaanBola;
     }
 
     public double getLuasPermukaanBola() {

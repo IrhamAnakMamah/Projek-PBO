@@ -5,23 +5,18 @@ import Benda.Benda2D;
 /**
  * 
  */
-public class PersegiPanjang extends Benda2D implements Runnable{
+public class PersegiPanjang extends Benda2D{
 
     public double panjang;
     public double lebar;
-    private double luasPersegiPanjang;
-    private double kelilingPersegiPanjang;
+    protected double luasPersegiPanjang;
+    protected double kelilingPersegiPanjang;
 
     public PersegiPanjang(double panjang, double lebar) {
         this.panjang = panjang;
         this.lebar = lebar;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Persegi Panjang");
-        luasPersegiPanjang = hitungLuas();
-        kelilingPersegiPanjang = hitungKeliling();
+        this.kelilingPersegiPanjang = hitungKeliling();
+        this.luasPersegiPanjang = hitungLuas();
     }
 
     @Override
@@ -31,7 +26,13 @@ public class PersegiPanjang extends Benda2D implements Runnable{
 
     @Override
     public double hitungLuas() {
-        return lebar * panjang;
+        luasPersegiPanjang =  lebar * panjang;
+        return luasPersegiPanjang;
+    }
+
+    public double hitungLuas(double lebarBaru, double panjangBaru) {
+        luasPersegiPanjang =  lebarBaru * panjangBaru;
+        return luasPersegiPanjang;
     }
 
     public double getLuasPersegiPanjang() {
@@ -40,7 +41,13 @@ public class PersegiPanjang extends Benda2D implements Runnable{
 
     @Override
     public double hitungKeliling() {
-        return 2 * (panjang + lebar);
+        kelilingPersegiPanjang = 2 * (panjang + lebar);
+        return kelilingPersegiPanjang;
+    }
+
+    public double hitungKeliling(double lebarBaru, double panjangBaru) {
+        kelilingPersegiPanjang = 2 * (panjangBaru + lebarBaru);
+        return kelilingPersegiPanjang;
     }
 
     public double getKelilingPersegiPanjang() {

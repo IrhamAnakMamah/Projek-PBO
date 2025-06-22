@@ -5,7 +5,7 @@ import Benda.Benda2D;
 /**
  * 
  */
-public class Segitiga extends Benda2D implements Runnable{
+public class Segitiga extends Benda2D{
 
     public double sisi;
     public double tinggi;
@@ -15,13 +15,8 @@ public class Segitiga extends Benda2D implements Runnable{
     public Segitiga(double sisi, double tinggi) {
         this.sisi = sisi;
         this.tinggi = tinggi;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Segitiga");
-        this.luasSegitiga = hitungLuas();
         this.kelilingSegitiga = hitungKeliling();
+        this.luasSegitiga = hitungLuas();
     }
 
     @Override
@@ -31,7 +26,13 @@ public class Segitiga extends Benda2D implements Runnable{
 
     @Override
     public double hitungLuas() {
-        return 0.5 * sisi * tinggi;
+        luasSegitiga = 0.5 * sisi * tinggi;
+        return luasSegitiga;
+    }
+
+    public double hitungLuas(double sisiBaru, double tinggiBaru) {
+        luasSegitiga = 0.5 * sisiBaru * tinggiBaru;
+        return luasSegitiga;
     }
 
     public double getLuasSegitiga() {
@@ -40,7 +41,13 @@ public class Segitiga extends Benda2D implements Runnable{
 
     @Override
     public double hitungKeliling() {
-        return 3 * sisi;
+        kelilingSegitiga = 3 * sisi;
+        return kelilingSegitiga;
+    }
+
+    public double hitungKeliling(double sisiBaru) {
+        kelilingSegitiga = 3 * sisiBaru;
+        return kelilingSegitiga;
     }
 
     public double getKelilingSegitiga() {

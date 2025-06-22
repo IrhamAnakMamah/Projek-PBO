@@ -1,8 +1,11 @@
+package Test;
+
+import View.ViewBangun2D.BelahKetupat.BelahKetupatView;
+
 import javax.swing.*;
 
-
-public class MainMenuView extends JFrame{
-    public MainMenuView(){
+public class NestedMenuExample {
+    public static void main(String[] args) {
         JFrame frame = new JFrame("Menu Sejajar Benda 2D");
         frame.setSize(660, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

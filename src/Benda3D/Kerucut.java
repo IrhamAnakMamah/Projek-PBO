@@ -11,7 +11,7 @@ import static java.lang.Math.sqrt;
 /**
  * 
  */
-public class Kerucut extends Lingkaran implements Benda3D, Runnable {
+public class Kerucut extends Lingkaran implements Benda3D{
     private double tinggiKerucut;
     private double volumeKerucut;
     private double luasPermukaanKerucut;
@@ -19,14 +19,8 @@ public class Kerucut extends Lingkaran implements Benda3D, Runnable {
     public Kerucut(double jariJari, double tinggiKerucut) {
         super(jariJari);
         this.tinggiKerucut = tinggiKerucut;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung Kerucut");
-        super.run();
-        luasPermukaanKerucut = hitungLuasPermukaan();
-        volumeKerucut = hitungVolume();
+        this.volumeKerucut = hitungVolume();
+        this.luasPermukaanKerucut = hitungLuasPermukaan();
     }
 
     public double getTinggiKerucut() {
@@ -40,16 +34,24 @@ public class Kerucut extends Lingkaran implements Benda3D, Runnable {
 
     @Override
     public double hitungVolume() {
-        return (double)1.0/3.0 * getLuasLingkaran() * tinggiKerucut;
+        volumeKerucut = (double)1.0/3.0 * super.pi * super.jariJari * super.jariJari * tinggiKerucut;
+        return volumeKerucut;
     }
 
-    public double getVolumeKerucut() {
+    public double hitungVolume(double jariJariBaru, double tinggiKerucutBaru) {
+        volumeKerucut = (double)1.0/3.0 * super.pi * jariJariBaru * jariJariBaru * tinggiKerucutBaru;
         return volumeKerucut;
     }
 
     @Override
     public double hitungLuasPermukaan() {
-        return sqrt((super.jariJari * super.jariJari) + (tinggiKerucut * tinggiKerucut));
+        luasPermukaanKerucut = sqrt((super.jariJari * super.jariJari) + (tinggiKerucut * tinggiKerucut));
+        return luasPermukaanKerucut;
+    }
+
+    public double hitungLuasPermukaan(double jariJariBaru, double tinggiKerucutBaru) {
+        luasPermukaanKerucut = sqrt((jariJariBaru * jariJariBaru) + (tinggiKerucutBaru * tinggiKerucutBaru));
+        return luasPermukaanKerucut;
     }
 
     public double getLuasPermukaanKerucut() {
