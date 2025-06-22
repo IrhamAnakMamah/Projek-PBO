@@ -1,6 +1,10 @@
 package View.ViewBangun3D.JuringBola;
 
 import Benda3D.JuringBola;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -33,76 +37,89 @@ public class JuringBolaView extends JFrame {
         jLabelTitle.setBounds(140, 20, 320, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Jari-Jari Bola (R):", jTextFieldJari, 100);
+        addLabelAndText("Sudut (theta):", jTextFieldTheta, 140);
+        addSeparator(0, 300);
 
-        JLabel jLabelJari = new JLabel("Jari-Jari Bola (R):");
-        jLabelJari.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelJari.setBounds(70, 100, 150, 25);
-        add(jLabelJari);
-        jTextFieldJari.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldJari.setBounds(230, 100, 200, 25);
-        add(jTextFieldJari);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnHitung.setBounds(55, 320, 100, 30);
+        add(btnHitung);
 
-        JLabel jLabelTheta = new JLabel("Sudut (theta) :");
-        jLabelTheta.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTheta.setBounds(70, 140, 160, 25);
-        add(jLabelTheta);
-        jTextFieldTheta.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTheta.setBounds(230, 140, 200, 25);
-        add(jTextFieldTheta);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnReset.setBounds(195, 320, 100, 30);
+        add(btnReset);
 
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 300, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 320, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 320, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 320, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnClose.setBounds(335, 320, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double r = Double.parseDouble(jTextFieldJari.getText());
-                double t = Double.parseDouble(jTextFieldTheta.getText());
-                if (r <= 0 || t <= 0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
-                }
-                JuringBola newJb = new JuringBola(r,t); //
+                String inputJari = jTextFieldJari.getText();
+                String inputTheta = jTextFieldTheta.getText();
 
-                Thread calcThread = new Thread(newJb);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputJari.isEmpty() || inputTheta.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input harus diisi!");
                 }
+
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputJari);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTheta);
+
+                // Konversi
+                double r = Double.parseDouble(inputJari);
+                double t = Double.parseDouble(inputTheta);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(r);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(t);
+
+                // Jalankan perhitungan
+                JuringBola newJb = new JuringBola(r, t);
+                Thread thread = new Thread(new HitungBendaTask(newJb));
+                thread.start();
+                thread.join();
 
                 new HasilJuringBolaView(newJb).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldJari.setText("");
             jTextFieldTheta.setText("");
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
@@ -110,9 +127,5 @@ public class JuringBolaView extends JFrame {
             jTextFieldJari.setText(String.valueOf(juringBola.getJariJari()));
             jTextFieldTheta.setText(String.valueOf(juringBola.getTheta()));
         }
-    }
-
-    public static void main(String[] args) {
-        new JuringBolaView().setVisible(true);
     }
 }

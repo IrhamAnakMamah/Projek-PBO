@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ *
  */
 public class PrismaBelahKetupat extends BelahKetupat implements Benda3D{
     private double tinggiPrisma;

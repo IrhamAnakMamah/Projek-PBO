@@ -1,6 +1,12 @@
 package View.ViewBangun3D.LimasTrapesium;
 
 import Benda3D.LimasTrapesium;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+// Diasumsikan ada kelas HasilLimasTrapesiumView di package yang sesuai
+//import View.ViewBangun3D.Hasil.HasilLimasTrapesiumView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,125 +43,128 @@ public class LimasTrapesiumView extends JFrame {
         jLabelTitle.setBounds(100, 20, 300, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Sisi Sejajar 1 Alas:", jTextFieldSisi1, 100);
+        addLabelAndText("Sisi Sejajar 2 Alas:", jTextFieldSisi2, 140);
+        addLabelAndText("Tinggi Alas:", jTextFieldTinggiAlas, 180);
+        addLabelAndText("Tinggi Limas:", jTextFieldTinggiLimas, 220);
+        addLabelAndText("Tinggi Sisi Tegak 1:", jTextFieldTinggiSisi1, 260);
+        addLabelAndText("Tinggi Sisi Tegak 2:", jTextFieldTinggiSisi2, 300);
+        addSeparator(0, 500);
 
-        JLabel jLabelSisi1 = new JLabel("Sisi Sejajar 1 Alas:");
-        jLabelSisi1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisi1.setBounds(70, 100, 150, 25);
-        add(jLabelSisi1);
-        jTextFieldSisi1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisi1.setBounds(230, 100, 200, 25);
-        add(jTextFieldSisi1);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 520, 100, 30);
+        add(btnHitung);
 
-        JLabel jLabelSisi2 = new JLabel("Sisi Sejajar 2 Alas :");
-        jLabelSisi2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisi2.setBounds(70, 140, 150, 25);
-        add(jLabelSisi2);
-        jTextFieldSisi2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisi2.setBounds(230, 140, 200, 25);
-        add(jTextFieldSisi2);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 520, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelTinggiAlas = new JLabel("Tinggi Alas :");
-        jLabelTinggiAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiAlas.setBounds(70, 180, 150, 25);
-        add(jLabelTinggiAlas);
-        jTextFieldTinggiAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiAlas.setBounds(230, 180, 200, 25);
-        add(jTextFieldTinggiAlas);
-
-        JLabel jLabelTinggiLimas = new JLabel("Tinggi Limas :");
-        jLabelTinggiLimas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiLimas.setBounds(70, 220, 150, 25);
-        add(jLabelTinggiLimas);
-        jTextFieldTinggiLimas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiLimas.setBounds(230, 220, 200, 25);
-        add(jTextFieldTinggiLimas);
-
-        JLabel jLabelTinggiSisi1 = new JLabel("Tinggi Sisi Tegak 1 :");
-        jLabelTinggiSisi1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiSisi1.setBounds(70, 260, 150, 25);
-        add(jLabelTinggiSisi1);
-        jTextFieldTinggiSisi1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiSisi1.setBounds(230, 260, 200, 25);
-        add(jTextFieldTinggiSisi1);
-
-        JLabel jLabelTinggiSisi2 = new JLabel("Tinggi Sisi Tegak 2 :");
-        jLabelTinggiSisi2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiSisi2.setBounds(70, 300, 150, 25);
-        add(jLabelTinggiSisi2);
-        jTextFieldTinggiSisi2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiSisi2.setBounds(230, 300, 200, 25);
-        add(jTextFieldTinggiSisi2);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 500, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 520, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 520, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 520, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 520, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double s1 = Double.parseDouble(jTextFieldSisi1.getText());
-                double s2 = Double.parseDouble(jTextFieldSisi2.getText());
-                double ta = Double.parseDouble(jTextFieldTinggiAlas.getText());
-                double tl = Double.parseDouble(jTextFieldTinggiLimas.getText());
-                double ts1 = Double.parseDouble(jTextFieldTinggiSisi1.getText());
-                double ts2 = Double.parseDouble(jTextFieldTinggiSisi2.getText());
+                String inputS1 = jTextFieldSisi1.getText();
+                String inputS2 = jTextFieldSisi2.getText();
+                String inputTA = jTextFieldTinggiAlas.getText();
+                String inputTL = jTextFieldTinggiLimas.getText();
+                String inputTS1 = jTextFieldTinggiSisi1.getText();
+                String inputTS2 = jTextFieldTinggiSisi2.getText();
 
-                LimasTrapesium newLimas = new LimasTrapesium(s1, s2, ta, tl, ts1, ts2); //
-
-                Thread calcThread = new Thread(newLimas);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputS1.isEmpty() || inputS2.isEmpty() || inputTA.isEmpty() || inputTL.isEmpty() ||
+                        inputTS1.isEmpty() || inputTS2.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input tidak boleh kosong!");
                 }
 
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputS1);
+                new ValidasiFormatAngka().operasiFormatAngka(inputS2);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTA);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTL);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTS1);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTS2);
+
+                // Konversi setelah validasi
+                double s1 = Double.parseDouble(inputS1);
+                double s2 = Double.parseDouble(inputS2);
+                double ta = Double.parseDouble(inputTA);
+                double tl = Double.parseDouble(inputTL);
+                double ts1 = Double.parseDouble(inputTS1);
+                double ts2 = Double.parseDouble(inputTS2);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(s1);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(s2);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(ta);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tl);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(ts1);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(ts2);
+
+                // Validasi logika: sisi sejajar tidak boleh sama
+                if (s1 == s2) {
+                    throw new IllegalArgumentException("Sisi sejajar tidak boleh sama (itu adalah Jajar Genjang/Persegi Panjang).");
+                }
+
+                // Jalankan perhitungan pada thread
+                LimasTrapesium newLimas = new LimasTrapesium(s1, s2, ta, tl, ts1, ts2);
+                Thread thread = new Thread(new HitungBendaTask(newLimas));
+                thread.start();
+                thread.join();
+
+                // Menampilkan hasil
                 new HasilLimasTrapesiumView(newLimas).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldSisi1.setText("");
             jTextFieldSisi2.setText("");
             jTextFieldTinggiAlas.setText("");
             jTextFieldTinggiLimas.setText("");
             jTextFieldTinggiSisi1.setText("");
             jTextFieldTinggiSisi2.setText("");
-            // reset all fields
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (limas != null) {
-            jTextFieldSisi1.setText(Double.toString(limas.sisiSejajar1));
-            jTextFieldSisi2.setText(Double.toString(limas.sisiSejajar2));
-            jTextFieldTinggiAlas.setText(Double.toString(limas.tinggi));
-            jTextFieldTinggiLimas.setText(Double.toString(limas.getTinggiLimas()));
-            jTextFieldTinggiSisi1.setText(Double.toString(limas.getTinggiSisiTegak1()));
-            jTextFieldTinggiSisi2.setText(Double.toString(limas.getTinggiSisiTegak2()));
+            // Diasumsikan kelas LimasTrapesium memiliki getter untuk semua properti
+            jTextFieldSisi1.setText(String.valueOf(limas.getSisiSejajar1()));
+            jTextFieldSisi2.setText(String.valueOf(limas.getSisiSejajar2()));
+            jTextFieldTinggiAlas.setText(String.valueOf(limas.tinggi));
+            jTextFieldTinggiLimas.setText(String.valueOf(limas.getTinggiLimas()));
+            jTextFieldTinggiSisi1.setText(String.valueOf(limas.getTinggiSisiTegak1()));
+            jTextFieldTinggiSisi2.setText(String.valueOf(limas.getTinggiSisiTegak2()));
         }
     }
 }

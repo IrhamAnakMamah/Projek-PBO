@@ -1,6 +1,10 @@
 package View.ViewBangun3D.LimasJajarGenjang;
 
 import Benda3D.LimasJajarGenjang;
+import Exception.ValidasiFormatAngka;
+import Exception.ValidasiAngkaNegatif;
+import Threading.HitungBendaTask;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -35,45 +39,12 @@ public class LimasJajarGenjangView extends JFrame {
         jLabelTitle.setBounds(50, 20, 400, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
-
-        JLabel jLabelAlas = new JLabel("Alas Jajar Genjang:");
-        jLabelAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelAlas.setBounds(70, 100, 150, 25);
-        add(jLabelAlas);
-        jTextFieldAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldAlas.setBounds(230, 100, 200, 25);
-        add(jTextFieldAlas);
-
-        JLabel jLabelTinggiAlas = new JLabel("Tinggi Alas :");
-        jLabelTinggiAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiAlas.setBounds(70, 140, 150, 25);
-        add(jLabelTinggiAlas);
-        jTextFieldTinggiAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiAlas.setBounds(230, 140, 200, 25);
-        add(jTextFieldTinggiAlas);
-
-        JLabel jLabelSudut = new JLabel("Sudut Lancip Alas :");
-        jLabelSudut.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSudut.setBounds(70, 180, 150, 25);
-        add(jLabelSudut);
-        jTextFieldSudut.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSudut.setBounds(230, 180, 200, 25);
-        add(jTextFieldSudut);
-
-        JLabel jLabelTinggiLimas = new JLabel("Tinggi Limas :");
-        jLabelTinggiLimas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiLimas.setBounds(70, 220, 150, 25);
-        add(jLabelTinggiLimas);
-        jTextFieldTinggiLimas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiLimas.setBounds(230, 220, 200, 25);
-        add(jTextFieldTinggiLimas);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 400, 500, 10);
-        add(jSeparator2);
+        addSeparator(0, 70);
+        addLabelAndText("Alas Jajar Genjang:", jTextFieldAlas, 100);
+        addLabelAndText("Tinggi Alas:", jTextFieldTinggiAlas, 140);
+        addLabelAndText("Sudut Lancip Alas:", jTextFieldSudut, 180);
+        addLabelAndText("Tinggi Limas:", jTextFieldTinggiLimas, 220);
+        addSeparator(0, 400);
 
         JButton jButtonsSave = new JButton("Hitung");
         jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -94,25 +65,42 @@ public class LimasJajarGenjangView extends JFrame {
 
         jButtonsSave.addActionListener(e -> {
             try {
-                double a = Double.parseDouble(jTextFieldAlas.getText());
-                double ta = Double.parseDouble(jTextFieldTinggiAlas.getText());
-                double s = Double.parseDouble(jTextFieldSudut.getText());
-                double tl = Double.parseDouble(jTextFieldTinggiLimas.getText());
+                String inputAlas = jTextFieldAlas.getText();
+                String inputTinggiAlas = jTextFieldTinggiAlas.getText();
+                String inputSudut = jTextFieldSudut.getText();
+                String inputTinggiLimas = jTextFieldTinggiLimas.getText();
+
+                if (inputAlas.isEmpty() || inputTinggiAlas.isEmpty() || inputSudut.isEmpty() || inputTinggiLimas.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input harus diisi!");
+                }
+
+                new ValidasiFormatAngka().operasiFormatAngka(inputAlas);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggiAlas);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSudut);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggiLimas);
+
+                double a = Double.parseDouble(inputAlas);
+                double ta = Double.parseDouble(inputTinggiAlas);
+                double s = Double.parseDouble(inputSudut);
+                double tl = Double.parseDouble(inputTinggiLimas);
+
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(a);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(ta);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(s);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tl);
 
                 LimasJajarGenjang newLimas = new LimasJajarGenjang(a, ta, s, tl);
-
-                Thread calcThread = new Thread(newLimas);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+                Thread thread = new Thread(new HitungBendaTask(newLimas));
+                thread.start();
+                thread.join();
 
                 new HasilLimasJajarGenjangView(newLimas).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -121,14 +109,30 @@ public class LimasJajarGenjangView extends JFrame {
             jTextFieldTinggiAlas.setText("");
             jTextFieldSudut.setText("");
             jTextFieldTinggiLimas.setText("");
-            // reset all fields
         });
+
         jButtonClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (limas != null) {
-            // parent properties are public
             jTextFieldAlas.setText(String.valueOf(limas.alas));
             jTextFieldTinggiAlas.setText(String.valueOf(limas.tinggi));
             jTextFieldSudut.setText(String.valueOf(limas.sudutLancip));

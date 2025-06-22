@@ -1,6 +1,12 @@
 package View.ViewBangun3D.LimasBelahKetupat;
 
 import Benda3D.LimasBelahKetupat;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+// Diasumsikan ada kelas HasilLimasBelahKetupatView di package yang sesuai
+//import View.ViewBangun3D.Hasil.HasilLimasBelahKetupatView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -35,102 +41,104 @@ public class LimasBelahKetupatView extends JFrame {
         jLabelTitle.setBounds(50, 20, 400, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Diagonal 1 Alas (d1):", jTextFieldD1, 100);
+        addLabelAndText("Diagonal 2 Alas (d2):", jTextFieldD2, 140);
+        addLabelAndText("Tinggi Limas:", jTextFieldTinggiLimas, 180);
+        addLabelAndText("Tinggi Sisi Tegak:", jTextFieldTinggiSisi, 220);
+        addSeparator(0, 400);
 
-        JLabel jLabelD1 = new JLabel("Diagonal 1 Alas:");
-        jLabelD1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelD1.setBounds(70, 100, 150, 25);
-        add(jLabelD1);
-        jTextFieldD1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldD1.setBounds(230, 100, 200, 25);
-        add(jTextFieldD1);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 420, 100, 30);
+        add(btnHitung);
 
-        JLabel jLabelD2 = new JLabel("Diagonal 2 Alas :");
-        jLabelD2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelD2.setBounds(70, 140, 150, 25);
-        add(jLabelD2);
-        jTextFieldD2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldD2.setBounds(230, 140, 200, 25);
-        add(jTextFieldD2);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 420, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelTinggiLimas = new JLabel("Tinggi Limas :");
-        jLabelTinggiLimas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiLimas.setBounds(70, 180, 150, 25);
-        add(jLabelTinggiLimas);
-        jTextFieldTinggiLimas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiLimas.setBounds(230, 180, 200, 25);
-        add(jTextFieldTinggiLimas);
-
-        JLabel jLabelTinggiSisi = new JLabel("Tinggi Sisi Tegak :");
-        jLabelTinggiSisi.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiSisi.setBounds(70, 220, 150, 25);
-        add(jLabelTinggiSisi);
-        jTextFieldTinggiSisi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiSisi.setBounds(230, 220, 200, 25);
-        add(jTextFieldTinggiSisi);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 400, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 420, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 420, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 420, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 420, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double d1 = Double.parseDouble(jTextFieldD1.getText());
-                double d2 = Double.parseDouble(jTextFieldD2.getText());
-                double tinggiLimas = Double.parseDouble(jTextFieldTinggiLimas.getText());
-                double tinggiSisi = Double.parseDouble(jTextFieldTinggiSisi.getText());
+                String inputD1 = jTextFieldD1.getText();
+                String inputD2 = jTextFieldD2.getText();
+                String inputTinggiLimas = jTextFieldTinggiLimas.getText();
+                String inputTinggiSisi = jTextFieldTinggiSisi.getText();
 
-                if (d1 <= 0 || d2 <= 0 || tinggiLimas <=0 || tinggiSisi <= 0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
-                }
-                LimasBelahKetupat newLimas = new LimasBelahKetupat(d1, d2, tinggiLimas, tinggiSisi); //
-
-                Thread calcThread = new Thread(newLimas);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputD1.isEmpty() || inputD2.isEmpty() || inputTinggiLimas.isEmpty() || inputTinggiSisi.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input tidak boleh kosong!");
                 }
 
-                // This class does not implement runnable, direct call
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputD1);
+                new ValidasiFormatAngka().operasiFormatAngka(inputD2);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggiLimas);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggiSisi);
+
+                // Konversi setelah validasi format
+                double d1 = Double.parseDouble(inputD1);
+                double d2 = Double.parseDouble(inputD2);
+                double tinggiLimas = Double.parseDouble(inputTinggiLimas);
+                double tinggiSisi = Double.parseDouble(inputTinggiSisi);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(d1);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(d2);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggiLimas);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggiSisi);
+
+                // Jalankan perhitungan pada thread
+                LimasBelahKetupat newLimas = new LimasBelahKetupat(d1, d2, tinggiLimas, tinggiSisi);
+                Thread thread = new Thread(new HitungBendaTask(newLimas));
+                thread.start();
+                thread.join();
+
+                // Menampilkan hasil
                 new HasilLimasBelahKetupatView(newLimas).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldD1.setText("");
             jTextFieldD2.setText("");
             jTextFieldTinggiLimas.setText("");
             jTextFieldTinggiSisi.setText("");
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (limas != null) {
+            // Diasumsikan kelas LimasBelahKetupat memiliki getter untuk semua properti
             jTextFieldD1.setText(String.valueOf(limas.diagonal1));
             jTextFieldD2.setText(String.valueOf(limas.diagonal2));
             jTextFieldTinggiLimas.setText(String.valueOf(limas.getTinggiLimas()));

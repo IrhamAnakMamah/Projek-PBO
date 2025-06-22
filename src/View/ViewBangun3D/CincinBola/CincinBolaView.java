@@ -1,6 +1,10 @@
 package View.ViewBangun3D.CincinBola;
 
 import Benda3D.CincinBola;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,86 +38,95 @@ public class CincinBolaView extends JFrame {
         jLabelTitle.setBounds(140, 20, 300, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Jari-Jari Bola (R):", jTextFieldJariBesar, 100);
+        addLabelAndText("Jari-Jari Dalam (r):", jTextFieldJariKecil, 140);
+        addLabelAndText("Jarak 2 Bidang (t):", jTextFieldJarak, 180);
+        addSeparator(0, 350);
 
-        JLabel jLabelJariBesar = new JLabel("Jari-Jari Bola (R) :");
-        jLabelJariBesar.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelJariBesar.setBounds(70, 100, 150, 25);
-        add(jLabelJariBesar);
-        jTextFieldJariBesar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldJariBesar.setBounds(230, 100, 200, 25);
-        add(jTextFieldJariBesar);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnHitung.setBounds(55, 370, 100, 30);
+        add(btnHitung);
 
-        JLabel jLabelJariKecil = new JLabel("Jari-Jari Dalam (r) :");
-        jLabelJariKecil.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelJariKecil.setBounds(70, 140, 150, 25);
-        add(jLabelJariKecil);
-        jTextFieldJariKecil.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldJariKecil.setBounds(230, 140, 200, 25);
-        add(jTextFieldJariKecil);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnReset.setBounds(195, 370, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelJarak = new JLabel("Jarak 2 Bidang (t) :");
-        jLabelJarak.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelJarak.setBounds(70, 180, 150, 25);
-        add(jLabelJarak);
-        jTextFieldJarak.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldJarak.setBounds(230, 180, 200, 25);
-        add(jTextFieldJarak);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 350, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 370, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 370, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 370, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnClose.setBounds(335, 370, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double rBesar = Double.parseDouble(jTextFieldJariBesar.getText());
-                double rKecil = Double.parseDouble(jTextFieldJariKecil.getText());
-                double jarak = Double.parseDouble(jTextFieldJarak.getText());
-                if (rBesar <= 0 || rKecil <= 0 || jarak <=0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
-                }
-                CincinBola newCb = new CincinBola(rBesar, rKecil, jarak); //
+                String inputRBesar = jTextFieldJariBesar.getText();
+                String inputRKecil = jTextFieldJariKecil.getText();
+                String inputJarak = jTextFieldJarak.getText();
 
-                Thread calcThread = new Thread(newCb);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputRBesar.isEmpty() || inputRKecil.isEmpty() || inputJarak.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input harus diisi!");
                 }
+
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputRBesar);
+                new ValidasiFormatAngka().operasiFormatAngka(inputRKecil);
+                new ValidasiFormatAngka().operasiFormatAngka(inputJarak);
+
+                // Parsing
+                double rBesar = Double.parseDouble(inputRBesar);
+                double rKecil = Double.parseDouble(inputRKecil);
+                double jarak = Double.parseDouble(inputJarak);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(rBesar);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(rKecil);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(jarak);
+
+                // Hitung dengan thread
+                CincinBola newCb = new CincinBola(rBesar, rKecil, jarak);
+                Thread thread = new Thread(new HitungBendaTask(newCb));
+                thread.start();
+                thread.join();
 
                 new HasilCincinBolaView(newCb).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldJariBesar.setText("");
             jTextFieldJariKecil.setText("");
             jTextFieldJarak.setText("");
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
@@ -121,7 +134,6 @@ public class CincinBolaView extends JFrame {
             jTextFieldJariBesar.setText(String.valueOf(cincinBola.getJariJari()));
             jTextFieldJariKecil.setText(String.valueOf(cincinBola.getJariJariDalam()));
             jTextFieldJarak.setText(String.valueOf(cincinBola.getJarakDuaBidang()));
-            // jariJariDalam dan jarakDuaBidang private tanpa getter
         }
     }
 }

@@ -1,15 +1,19 @@
 package View.ViewBangun2D.Trapesium;
 
 import Benda2D.Trapesium;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class TrapesiumView extends JFrame {
 
-    Trapesium trapesium;
-    JTextField jTextFieldSisi1 = new JTextField();
-    JTextField jTextFieldSisi2 = new JTextField();
-    JTextField jTextFieldTinggi = new JTextField();
+    private Trapesium trapesium;
+    private final JTextField jTextFieldSisi1 = new JTextField();
+    private final JTextField jTextFieldSisi2 = new JTextField();
+    private final JTextField jTextFieldTinggi = new JTextField();
 
     public TrapesiumView() {
         initComponents();
@@ -34,96 +38,106 @@ public class TrapesiumView extends JFrame {
         jLabelTitle.setBounds(150, 20, 300, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Sisi Sejajar 1:", jTextFieldSisi1, 100);
+        addLabelAndText("Sisi Sejajar 2:", jTextFieldSisi2, 140);
+        addLabelAndText("Tinggi:", jTextFieldTinggi, 180);
+        addSeparator(0, 350);
 
-        JLabel jLabelSisi1 = new JLabel("Sisi Sejajar 1 :");
-        jLabelSisi1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisi1.setBounds(70, 100, 150, 25);
-        add(jLabelSisi1);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 370, 100, 30);
+        add(btnHitung);
 
-        jTextFieldSisi1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisi1.setBounds(230, 100, 200, 25);
-        add(jTextFieldSisi1);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 370, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelSisi2 = new JLabel("Sisi Sejajar 2 :");
-        jLabelSisi2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisi2.setBounds(70, 140, 150, 25);
-        add(jLabelSisi2);
-
-        jTextFieldSisi2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisi2.setBounds(230, 140, 200, 25);
-        add(jTextFieldSisi2);
-
-        JLabel jLabelTinggi = new JLabel("Tinggi :");
-        jLabelTinggi.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggi.setBounds(70, 180, 150, 25);
-        add(jLabelTinggi);
-
-        jTextFieldTinggi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggi.setBounds(230, 180, 200, 25);
-        add(jTextFieldTinggi);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 350, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 370, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 370, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 370, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 370, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double sisi1 = Double.parseDouble(jTextFieldSisi1.getText());
-                double sisi2 = Double.parseDouble(jTextFieldSisi2.getText());
-                double tinggi = Double.parseDouble(jTextFieldTinggi.getText());
-                if (sisi1 <= 0 || sisi2 <= 0 || tinggi <= 0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
-                }
-                Trapesium newTrapesium = new Trapesium(sisi1, sisi2, tinggi); //
+                String inputSisi1 = jTextFieldSisi1.getText();
+                String inputSisi2 = jTextFieldSisi2.getText();
+                String inputTinggi = jTextFieldTinggi.getText();
 
-                Thread calcThread = new Thread(newTrapesium);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputSisi1.isEmpty() || inputSisi2.isEmpty() || inputTinggi.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input tidak boleh kosong!");
                 }
 
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputSisi1);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSisi2);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggi);
+
+                // Konversi setelah validasi
+                double sisi1 = Double.parseDouble(inputSisi1);
+                double sisi2 = Double.parseDouble(inputSisi2);
+                double tinggi = Double.parseDouble(inputTinggi);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sisi1);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sisi2);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggi);
+
+                // Validasi logika
+                if (sisi1 == sisi2) {
+                    throw new IllegalArgumentException("Sisi sejajar tidak boleh sama (itu adalah Jajar Genjang).");
+                }
+
+                // Jalankan perhitungan pada thread
+                Trapesium newTrapesium = new Trapesium(sisi1, sisi2, tinggi);
+                Thread thread = new Thread(new HitungBendaTask(newTrapesium));
+                thread.start();
+                thread.join();
+
+                // Menampilkan hasil
                 new HasilTrapesiumView(newTrapesium).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Perhitungan terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldSisi1.setText("");
             jTextFieldSisi2.setText("");
             jTextFieldTinggi.setText("");
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (trapesium != null) {
-            jTextFieldSisi1.setText(String.valueOf(trapesium.sisiSejajar1)); //
-            jTextFieldSisi2.setText(String.valueOf(trapesium.sisiSejajar2)); //
-            jTextFieldTinggi.setText(String.valueOf(trapesium.tinggi)); //
+            // Diasumsikan kelas Trapesium memiliki getter untuk properti
+            jTextFieldSisi1.setText(String.valueOf(trapesium.getSisiSejajar1()));
+            jTextFieldSisi2.setText(String.valueOf(trapesium.getSisiSejajar2()));
+            jTextFieldTinggi.setText(String.valueOf(trapesium.getTinggi()));
         }
     }
 }

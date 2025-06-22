@@ -1,6 +1,12 @@
 package View.ViewBangun3D.PrismaLayangLayang;
 
 import Benda3D.PrismaLayangLayang;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+// Diasumsikan ada kelas HasilPrismaLayangLayangView di package yang sesuai
+//import View.ViewBangun3D.Hasil.HasilPrismaLayangLayangView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -36,110 +42,115 @@ public class PrismaLayangLayangView extends JFrame {
         jLabelTitle.setBounds(50, 20, 400, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Diagonal 1 Alas (d1):", jTextFieldD1, 100);
+        addLabelAndText("Diagonal 2 Alas (d2):", jTextFieldD2, 140);
+        addLabelAndText("Sisi A Alas:", jTextFieldSisi1, 180);
+        addLabelAndText("Sisi B Alas:", jTextFieldSisi2, 220);
+        addLabelAndText("Tinggi Prisma:", jTextFieldTinggiPrisma, 260);
+        addSeparator(0, 450);
 
-        JLabel jLabelD1 = new JLabel("Diagonal 1 Alas:");
-        jLabelD1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelD1.setBounds(70, 100, 150, 25);
-        add(jLabelD1);
-        jTextFieldD1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldD1.setBounds(230, 100, 200, 25);
-        add(jTextFieldD1);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 470, 100, 30);
+        add(btnHitung);
 
-        JLabel jLabelD2 = new JLabel("Diagonal 2 Alas :");
-        jLabelD2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelD2.setBounds(70, 140, 150, 25);
-        add(jLabelD2);
-        jTextFieldD2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldD2.setBounds(230, 140, 200, 25);
-        add(jTextFieldD2);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 470, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelSisi1 = new JLabel("Sisi A Alas :");
-        jLabelSisi1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisi1.setBounds(70, 180, 150, 25);
-        add(jLabelSisi1);
-        jTextFieldSisi1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisi1.setBounds(230, 180, 200, 25);
-        add(jTextFieldSisi1);
-
-        JLabel jLabelSisi2 = new JLabel("Sisi B Alas :");
-        jLabelSisi2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisi2.setBounds(70, 220, 150, 25);
-        add(jLabelSisi2);
-        jTextFieldSisi2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisi2.setBounds(230, 220, 200, 25);
-        add(jTextFieldSisi2);
-
-        JLabel jLabelTinggiPrisma = new JLabel("Tinggi Prisma :");
-        jLabelTinggiPrisma.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiPrisma.setBounds(70, 260, 150, 25);
-        add(jLabelTinggiPrisma);
-        jTextFieldTinggiPrisma.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiPrisma.setBounds(230, 260, 200, 25);
-        add(jTextFieldTinggiPrisma);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 450, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 470, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 470, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 470, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 470, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double d1 = Double.parseDouble(jTextFieldD1.getText());
-                double d2 = Double.parseDouble(jTextFieldD2.getText());
-                double s1 = Double.parseDouble(jTextFieldSisi1.getText());
-                double s2 = Double.parseDouble(jTextFieldSisi2.getText());
-                double tp = Double.parseDouble(jTextFieldTinggiPrisma.getText());
+                String inputD1 = jTextFieldD1.getText();
+                String inputD2 = jTextFieldD2.getText();
+                String inputS1 = jTextFieldSisi1.getText();
+                String inputS2 = jTextFieldSisi2.getText();
+                String inputTP = jTextFieldTinggiPrisma.getText();
 
-                PrismaLayangLayang newPrisma = new PrismaLayangLayang(d1, d2, s1, s2, tp); //
-
-                Thread calcThread = new Thread(newPrisma);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputD1.isEmpty() || inputD2.isEmpty() || inputS1.isEmpty() || inputS2.isEmpty() || inputTP.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input tidak boleh kosong!");
                 }
 
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputD1);
+                new ValidasiFormatAngka().operasiFormatAngka(inputD2);
+                new ValidasiFormatAngka().operasiFormatAngka(inputS1);
+                new ValidasiFormatAngka().operasiFormatAngka(inputS2);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTP);
+
+                // Konversi setelah validasi
+                double d1 = Double.parseDouble(inputD1);
+                double d2 = Double.parseDouble(inputD2);
+                double s1 = Double.parseDouble(inputS1);
+                double s2 = Double.parseDouble(inputS2);
+                double tp = Double.parseDouble(inputTP);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(d1);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(d2);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(s1);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(s2);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tp);
+
+                // Validasi logika: sisi-sisi layang-layang tidak boleh sama
+                if (s1 == s2) {
+                    throw new IllegalArgumentException("Sisi A dan Sisi B tidak boleh sama (itu adalah Prisma Belah Ketupat).");
+                }
+
+                // Jalankan perhitungan pada thread
+                PrismaLayangLayang newPrisma = new PrismaLayangLayang(d1, d2, s1, s2, tp);
+                Thread thread = new Thread(new HitungBendaTask(newPrisma));
+                thread.start();
+                thread.join();
+
+                // Menampilkan hasil
                 new HasilPrismaLayangLayangView(newPrisma).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldD1.setText("");
             jTextFieldD2.setText("");
             jTextFieldSisi1.setText("");
             jTextFieldSisi2.setText("");
             jTextFieldTinggiPrisma.setText("");
-            // reset all fields
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (prisma != null) {
-            // properties public in parent class LayangLayang
+            // Diasumsikan kelas PrismaLayangLayang dan parent-nya memiliki getter ini
             jTextFieldD1.setText(String.valueOf(prisma.diagonal1));
             jTextFieldD2.setText(String.valueOf(prisma.diagonal2));
             jTextFieldSisi1.setText(String.valueOf(prisma.sisi1));

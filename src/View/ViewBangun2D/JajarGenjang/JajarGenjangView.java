@@ -1,6 +1,10 @@
 package View.ViewBangun2D.JajarGenjang;
 
 import Benda2D.JajarGenjang;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,96 +38,106 @@ public class JajarGenjangView extends JFrame {
         jLabelTitle.setBounds(110, 20, 300, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Alas:", jTextFieldAlas, 100);
+        addLabelAndText("Tinggi:", jTextFieldTinggi, 140);
+        addLabelAndText("Sudut Lancip (°):", jTextFieldSudut, 180);
+        addSeparator(0, 350);
 
-        JLabel jLabelAlas = new JLabel("Alas :");
-        jLabelAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelAlas.setBounds(70, 100, 150, 25);
-        add(jLabelAlas);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 370, 100, 30);
+        add(btnHitung);
 
-        jTextFieldAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldAlas.setBounds(230, 100, 200, 25);
-        add(jTextFieldAlas);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 370, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelTinggi = new JLabel("Tinggi :");
-        jLabelTinggi.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggi.setBounds(70, 140, 150, 25);
-        add(jLabelTinggi);
-
-        jTextFieldTinggi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggi.setBounds(230, 140, 200, 25);
-        add(jTextFieldTinggi);
-
-        JLabel jLabelSudut = new JLabel("Sudut Lancip :");
-        jLabelSudut.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSudut.setBounds(70, 180, 150, 25);
-        add(jLabelSudut);
-
-        jTextFieldSudut.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSudut.setBounds(230, 180, 200, 25);
-        add(jTextFieldSudut);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 350, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 370, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 370, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 370, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 370, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double alas = Double.parseDouble(jTextFieldAlas.getText());
-                double tinggi = Double.parseDouble(jTextFieldTinggi.getText());
-                double sudut = Double.parseDouble(jTextFieldSudut.getText());
-                if (alas <= 0 || tinggi <= 0 || sudut <=0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
-                }
-                JajarGenjang newJg = new JajarGenjang(alas, tinggi, sudut); //
+                String inputAlas = jTextFieldAlas.getText();
+                String inputTinggi = jTextFieldTinggi.getText();
+                String inputSudut = jTextFieldSudut.getText();
 
-                Thread calcThread = new Thread(newJg);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputAlas.isEmpty() || inputTinggi.isEmpty() || inputSudut.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input tidak boleh kosong!");
                 }
 
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputAlas);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggi);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSudut);
+
+                // Konversi setelah validasi
+                double alas = Double.parseDouble(inputAlas);
+                double tinggi = Double.parseDouble(inputTinggi);
+                double sudut = Double.parseDouble(inputSudut);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(alas);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggi);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sudut);
+
+                // Validasi logika untuk sudut lancip
+                if (sudut <= 0 || sudut >= 90) {
+                    throw new IllegalArgumentException("Sudut lancip harus lebih dari 0 dan kurang dari 90 derajat.");
+                }
+
+                // Jalankan perhitungan pada thread
+                JajarGenjang newJg = new JajarGenjang(alas, tinggi, sudut);
+                Thread thread = new Thread(new HitungBendaTask(newJg));
+                thread.start();
+                thread.join();
+
+                // Menampilkan hasil
                 new HasilJajarGenjangView(newJg).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldAlas.setText("");
             jTextFieldTinggi.setText("");
             jTextFieldSudut.setText("");
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (jajarGenjang != null) {
-            jTextFieldAlas.setText(String.valueOf(jajarGenjang.alas)); //
-            jTextFieldTinggi.setText(String.valueOf(jajarGenjang.tinggi)); //
-            jTextFieldSudut.setText(String.valueOf(jajarGenjang.sudutLancip)); //
+            // Diasumsikan kelas JajarGenjang memiliki getter untuk properti
+            jTextFieldAlas.setText(String.valueOf(jajarGenjang.alas));
+            jTextFieldTinggi.setText(String.valueOf(jajarGenjang.tinggi));
+            jTextFieldSudut.setText(String.valueOf(jajarGenjang.sudutLancip));
         }
     }
 }

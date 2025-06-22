@@ -46,7 +46,7 @@ public class TemberengBola extends Bola implements Benda3D{
     }
 
     public double hitungVolume(double jariJariBaru, double tinggiTemberengBaru) {
-        volumeTemberengBola = (1.0 / 6.0) * super/pi * tinggiTemberengBaru * (3 * jariJariBaru * jariJariBaru + tinggiTemberengBaru * tinggiTemberengBaru);
+        volumeTemberengBola = (1.0 / 6.0) * super.pi * tinggiTemberengBaru * (3 * jariJariBaru * jariJariBaru + tinggiTemberengBaru * tinggiTemberengBaru);
         return volumeTemberengBola;
     }
 

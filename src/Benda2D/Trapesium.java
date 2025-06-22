@@ -57,4 +57,17 @@ public class Trapesium extends Benda2D{
         return kelilingTrapesium;
     }
 
+    public double getSisiSejajar1(){
+        return sisiSejajar1;
+    }
+
+    public double getSisiSejajar2(){
+        return sisiSejajar2;
+    }
+
+    public double getTinggi(){
+        return tinggi;
+    }
+
+
 }

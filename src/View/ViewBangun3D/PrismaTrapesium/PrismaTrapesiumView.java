@@ -1,6 +1,10 @@
 package View.ViewBangun3D.PrismaTrapesium;
 
 import Benda3D.PrismaTrapesium;
+import Exception.ValidasiFormatAngka;
+import Exception.ValidasiAngkaNegatif;
+import Threading.HitungBendaTask;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,11 +15,10 @@ public class PrismaTrapesiumView extends JFrame {
     JTextField jTextFieldAlasBawah = new JTextField();
     JTextField jTextFieldTinggiAlas = new JTextField();
     JTextField jTextFieldTinggiPrisma = new JTextField();
-    JTextField jTextFieldSisiA = new JTextField(); // Tambah field untuk sisi A
-    JTextField jTextFieldSisiB = new JTextField(); // Tambah field untuk sisi B
-    JTextField jTextFieldSisiC = new JTextField(); // Tambah field untuk sisi C
-    JTextField jTextFieldSisiD = new JTextField(); // Tambah field untuk sisi D
-
+    JTextField jTextFieldSisiA = new JTextField();
+    JTextField jTextFieldSisiB = new JTextField();
+    JTextField jTextFieldSisiC = new JTextField();
+    JTextField jTextFieldSisiD = new JTextField();
 
     public PrismaTrapesiumView() {
         initComponents();
@@ -32,7 +35,7 @@ public class PrismaTrapesiumView extends JFrame {
 
     private void initComponents() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 650); // Sesuaikan ukuran frame agar semua input terlihat
+        setSize(500, 650);
         setLayout(null);
 
         JLabel jLabelTitle = new JLabel("PRISMA TRAPESIUM");
@@ -40,131 +43,90 @@ public class PrismaTrapesiumView extends JFrame {
         jLabelTitle.setBounds(80, 20, 400, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndField("Alas Atas (a):", jTextFieldAlasAtas, 100);
+        addLabelAndField("Alas Bawah (b):", jTextFieldAlasBawah, 140);
+        addLabelAndField("Tinggi Alas Trapesium:", jTextFieldTinggiAlas, 180);
+        addLabelAndField("Tinggi Prisma (t):", jTextFieldTinggiPrisma, 220);
+        addLabelAndField("Sisi Miring Kiri Alas:", jTextFieldSisiA, 260);
+        addLabelAndField("Sisi Miring Kanan Alas:", jTextFieldSisiB, 300);
+        addLabelAndField("Sisi Alas Atas (C):", jTextFieldSisiC, 340);
+        addLabelAndField("Sisi Alas Bawah (D):", jTextFieldSisiD, 380);
+        addSeparator(0, 550);
 
-        JLabel jLabelAlasAtas = new JLabel("Alas Atas (a):");
-        jLabelAlasAtas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelAlasAtas.setBounds(70, 100, 150, 25);
-        add(jLabelAlasAtas);
-        jTextFieldAlasAtas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldAlasAtas.setBounds(230, 100, 200, 25);
-        add(jTextFieldAlasAtas);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 570, 100, 30);
+        add(btnHitung);
 
-        JLabel jLabelAlasBawah = new JLabel("Alas Bawah (b) :");
-        jLabelAlasBawah.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelAlasBawah.setBounds(70, 140, 150, 25);
-        add(jLabelAlasBawah);
-        jTextFieldAlasBawah.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldAlasBawah.setBounds(230, 140, 200, 25);
-        add(jTextFieldAlasBawah);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 570, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelTinggiAlas = new JLabel("Tinggi Alas Trapesium:");
-        jLabelTinggiAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiAlas.setBounds(70, 180, 150, 25);
-        add(jLabelTinggiAlas);
-        jTextFieldTinggiAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiAlas.setBounds(230, 180, 200, 25);
-        add(jTextFieldTinggiAlas);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 570, 100, 30);
+        add(btnClose);
 
-        JLabel jLabelTinggiPrisma = new JLabel("Tinggi Prisma (t) :");
-        jLabelTinggiPrisma.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiPrisma.setBounds(70, 220, 150, 25);
-        add(jLabelTinggiPrisma);
-        jTextFieldTinggiPrisma.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiPrisma.setBounds(230, 220, 200, 25);
-        add(jTextFieldTinggiPrisma);
+        cek();
 
-        // Tambah label dan text field untuk sisi A, B, C, D dari alas trapesium
-        JLabel jLabelSisiA = new JLabel("Sisi Miring Kiri Alas:");
-        jLabelSisiA.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisiA.setBounds(70, 260, 150, 25);
-        add(jLabelSisiA);
-        jTextFieldSisiA.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisiA.setBounds(230, 260, 200, 25);
-        add(jTextFieldSisiA);
-
-        JLabel jLabelSisiB = new JLabel("Sisi Miring Kanan Alas:");
-        jLabelSisiB.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisiB.setBounds(70, 300, 160, 25); // Sesuaikan lebar agar tidak terpotong
-        add(jLabelSisiB);
-        jTextFieldSisiB.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisiB.setBounds(230, 300, 200, 25);
-        add(jTextFieldSisiB);
-
-        JLabel jLabelSisiC = new JLabel("Sisi Alas Atas (C):");
-        jLabelSisiC.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisiC.setBounds(70, 340, 150, 25);
-        add(jLabelSisiC);
-        jTextFieldSisiC.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisiC.setBounds(230, 340, 200, 25);
-        add(jTextFieldSisiC);
-
-        JLabel jLabelSisiD = new JLabel("Sisi Alas Bawah (D):");
-        jLabelSisiD.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisiD.setBounds(70, 380, 150, 25);
-        add(jLabelSisiD);
-        jTextFieldSisiD.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisiD.setBounds(230, 380, 200, 25);
-        add(jTextFieldSisiD);
-
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 550, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 570, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 570, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 570, 100, 30);
-        add(jButtonClose);
-
-        cek(); // Panggil cek() untuk mengisi field jika ada objek prisma yang sudah ada
-
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double alasAtas = Double.parseDouble(jTextFieldAlasAtas.getText());
-                double alasBawah = Double.parseDouble(jTextFieldAlasBawah.getText());
-                double tinggiAlas = Double.parseDouble(jTextFieldTinggiAlas.getText());
-                double tinggiPrisma = Double.parseDouble(jTextFieldTinggiPrisma.getText());
-                double sisiA = Double.parseDouble(jTextFieldSisiA.getText());
-                double sisiB = Double.parseDouble(jTextFieldSisiB.getText());
-                double sisiC = Double.parseDouble(jTextFieldSisiC.getText());
-                double sisiD = Double.parseDouble(jTextFieldSisiD.getText());
+                String inputA = jTextFieldAlasAtas.getText();
+                String inputB = jTextFieldAlasBawah.getText();
+                String inputTinggiAlas = jTextFieldTinggiAlas.getText();
+                String inputTinggiPrisma = jTextFieldTinggiPrisma.getText();
+                String inputSisiA = jTextFieldSisiA.getText();
+                String inputSisiB = jTextFieldSisiB.getText();
+                String inputSisiC = jTextFieldSisiC.getText();
+                String inputSisiD = jTextFieldSisiD.getText();
 
-                if (alasAtas <= 0 || alasBawah <= 0 || tinggiAlas <= 0 || tinggiPrisma <= 0 ||
-                        sisiA <= 0 || sisiB <= 0 || sisiC <= 0 || sisiD <= 0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
+                if (inputA.isEmpty() || inputB.isEmpty() || inputTinggiAlas.isEmpty() ||
+                        inputTinggiPrisma.isEmpty() || inputSisiA.isEmpty() || inputSisiB.isEmpty() ||
+                        inputSisiC.isEmpty() || inputSisiD.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input harus diisi!");
                 }
 
-                PrismaTrapesium newPrisma = new PrismaTrapesium(alasAtas, alasBawah, tinggiAlas, tinggiPrisma, sisiA, sisiB, sisiC, sisiD);
+                new ValidasiFormatAngka().operasiFormatAngka(inputA);
+                new ValidasiFormatAngka().operasiFormatAngka(inputB);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggiAlas);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggiPrisma);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSisiA);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSisiB);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSisiC);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSisiD);
 
-                Thread calcThread = new Thread(newPrisma);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+                double a = Double.parseDouble(inputA);
+                double b = Double.parseDouble(inputB);
+                double tinggiAlas = Double.parseDouble(inputTinggiAlas);
+                double tinggiPrisma = Double.parseDouble(inputTinggiPrisma);
+                double sisiA = Double.parseDouble(inputSisiA);
+                double sisiB = Double.parseDouble(inputSisiB);
+                double sisiC = Double.parseDouble(inputSisiC);
+                double sisiD = Double.parseDouble(inputSisiD);
+
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(a);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(b);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggiAlas);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggiPrisma);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sisiA);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sisiB);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sisiC);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sisiD);
+
+                PrismaTrapesium newPrisma = new PrismaTrapesium(a, b, tinggiAlas, tinggiPrisma, sisiA, sisiB, sisiC, sisiD);
+                Thread thread = new Thread(new HitungBendaTask(newPrisma));
+                thread.start();
+                thread.join();
 
                 new HasilPrismaTrapesiumView(newPrisma).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldAlasAtas.setText("");
             jTextFieldAlasBawah.setText("");
             jTextFieldTinggiAlas.setText("");
@@ -174,14 +136,32 @@ public class PrismaTrapesiumView extends JFrame {
             jTextFieldSisiC.setText("");
             jTextFieldSisiD.setText("");
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndField(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 160, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (prisma != null) {
-            jTextFieldAlasAtas.setText(String.valueOf(prisma.sisiSejajar1));
-            jTextFieldAlasBawah.setText(String.valueOf(prisma.sisiSejajar2));
-            jTextFieldTinggiAlas.setText(String.valueOf(prisma.tinggi));
+            jTextFieldAlasAtas.setText(String.valueOf(prisma.getSisiSejajar1()));
+            jTextFieldAlasBawah.setText(String.valueOf(prisma.getSisiSejajar2()));
+            jTextFieldTinggiAlas.setText(String.valueOf(prisma.getTinggi()));
             jTextFieldTinggiPrisma.setText(String.valueOf(prisma.getTinggiPrismaTrapesium()));
             jTextFieldSisiA.setText(String.valueOf(prisma.getSisiA()));
             jTextFieldSisiB.setText(String.valueOf(prisma.getSisiB()));

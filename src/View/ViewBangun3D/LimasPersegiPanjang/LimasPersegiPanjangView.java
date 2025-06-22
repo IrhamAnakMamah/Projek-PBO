@@ -1,6 +1,12 @@
 package View.ViewBangun3D.LimasPersegiPanjang;
 
 import Benda3D.LimasPersegiPanjang;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+// Diasumsikan ada kelas HasilLimasPersegiPanjangView di package yang sesuai
+//import View.ViewBangun3D.Hasil.HasilLimasPersegiPanjangView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,93 +40,106 @@ public class LimasPersegiPanjangView extends JFrame {
         jLabelTitle.setBounds(50, 20, 400, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Panjang Alas:", jTextFieldPanjang, 100);
+        addLabelAndText("Lebar Alas:", jTextFieldLebar, 140);
+        addLabelAndText("Tinggi Limas:", jTextFieldTinggi, 180);
+        addSeparator(0, 350);
 
-        JLabel jLabelPanjang = new JLabel("Panjang Alas:");
-        jLabelPanjang.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelPanjang.setBounds(70, 100, 150, 25);
-        add(jLabelPanjang);
-        jTextFieldPanjang.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldPanjang.setBounds(230, 100, 200, 25);
-        add(jTextFieldPanjang);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 370, 100, 30);
+        add(btnHitung);
 
-        JLabel jLabelLebar = new JLabel("Lebar Alas :");
-        jLabelLebar.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelLebar.setBounds(70, 140, 150, 25);
-        add(jLabelLebar);
-        jTextFieldLebar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldLebar.setBounds(230, 140, 200, 25);
-        add(jTextFieldLebar);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 370, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelTinggi = new JLabel("Tinggi Limas :");
-        jLabelTinggi.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggi.setBounds(70, 180, 150, 25);
-        add(jLabelTinggi);
-        jTextFieldTinggi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggi.setBounds(230, 180, 200, 25);
-        add(jTextFieldTinggi);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 350, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 370, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 370, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 370, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 370, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double p = Double.parseDouble(jTextFieldPanjang.getText());
-                double l = Double.parseDouble(jTextFieldLebar.getText());
-                double t = Double.parseDouble(jTextFieldTinggi.getText());
-                if (p <= 0 || l <= 0 || t <=0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
-                }
-                LimasPersegiPanjang newLimas = new LimasPersegiPanjang(p,l,t);
+                String inputPanjang = jTextFieldPanjang.getText();
+                String inputLebar = jTextFieldLebar.getText();
+                String inputTinggi = jTextFieldTinggi.getText();
 
-                Thread calcThread = new Thread(newLimas);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputPanjang.isEmpty() || inputLebar.isEmpty() || inputTinggi.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input tidak boleh kosong!");
                 }
 
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputPanjang);
+                new ValidasiFormatAngka().operasiFormatAngka(inputLebar);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggi);
+
+                // Konversi setelah validasi
+                double panjang = Double.parseDouble(inputPanjang);
+                double lebar = Double.parseDouble(inputLebar);
+                double tinggi = Double.parseDouble(inputTinggi);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(panjang);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(lebar);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggi);
+
+                // Validasi logika: panjang dan lebar tidak boleh sama
+                if (panjang == lebar) {
+                    throw new IllegalArgumentException("Panjang dan Lebar tidak boleh sama (itu adalah Limas Persegi).");
+                }
+
+                // Jalankan perhitungan pada thread
+                LimasPersegiPanjang newLimas = new LimasPersegiPanjang(panjang, lebar, tinggi);
+                Thread thread = new Thread(new HitungBendaTask(newLimas));
+                thread.start();
+                thread.join();
+
+                // Menampilkan hasil
                 new HasilLimasPersegiPanjangView(newLimas).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldPanjang.setText("");
             jTextFieldLebar.setText("");
             jTextFieldTinggi.setText("");
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (limas != null) {
+            // Diasumsikan kelas LimasPersegiPanjang memiliki getter untuk semua properti
             jTextFieldPanjang.setText(String.valueOf(limas.panjang));
             jTextFieldLebar.setText(String.valueOf(limas.lebar));
-            jTextFieldTinggi.setText(String.valueOf(limas.tinggiLimasPersegiPanjang));
+            jTextFieldTinggi.setText(String.valueOf(limas.getTinggiLimasPersegiPanjang()));
         }
     }
 }

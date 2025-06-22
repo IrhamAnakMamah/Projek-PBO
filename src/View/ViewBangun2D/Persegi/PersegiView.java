@@ -1,6 +1,10 @@
 package View.ViewBangun2D.Persegi;
 
 import Benda2D.Persegi;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,69 +36,84 @@ public class PersegiView extends JFrame {
         jLabelTitle.setBounds(180, 20, 200, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Sisi:", jTextFieldSisi, 100);
+        addSeparator(0, 250);
 
-        JLabel jLabelSisi = new JLabel("Sisi :");
-        jLabelSisi.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisi.setBounds(70, 100, 150, 25);
-        add(jLabelSisi);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 270, 100, 30);
+        add(btnHitung);
 
-        jTextFieldSisi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisi.setBounds(230, 100, 200, 25);
-        add(jTextFieldSisi);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 270, 100, 30);
+        add(btnReset);
 
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 250, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 270, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 270, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 270, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 270, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double sisi = Double.parseDouble(jTextFieldSisi.getText());
-                if (sisi <= 0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
+                String inputSisi = jTextFieldSisi.getText();
+
+                // Validasi input kosong
+                if (inputSisi.isEmpty()) {
+                    throw new IllegalArgumentException("Input tidak boleh kosong!");
                 }
+
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputSisi);
+
+                // Konversi setelah validasi
+                double sisi = Double.parseDouble(inputSisi);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sisi);
+
+                // Jalankan perhitungan pada thread
                 Persegi newPersegi = new Persegi(sisi);
+                Thread thread = new Thread(new HitungBendaTask(newPersegi));
+                thread.start();
+                thread.join();
 
-                Thread calcThread = new Thread(newPersegi);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-
+                // Menampilkan hasil
                 new HasilPersegiView(newPersegi).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> jTextFieldSisi.setText(""));
-        jButtonClose.addActionListener(e -> dispose());
+        btnReset.addActionListener(e -> jTextFieldSisi.setText(""));
+
+        btnClose.addActionListener(e -> dispose());
     }
 
-    void cek(){
-        if(persegi != null){
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
+    }
+
+    void cek() {
+        if (persegi != null) {
+            // Diasumsikan kelas Persegi memiliki getter untuk properti
             jTextFieldSisi.setText(String.valueOf(persegi.sisi));
         }
     }

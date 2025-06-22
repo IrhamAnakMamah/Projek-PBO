@@ -1,6 +1,10 @@
 package View.ViewBangun2D.Lingkaran;
 
 import Benda2D.Lingkaran;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,65 +36,79 @@ public class LingkaranView extends JFrame {
         jLabelTitle.setBounds(150, 20, 200, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Jari-Jari:", jTextFieldJariJari, 100);
+        addSeparator(0, 250);
 
-        JLabel jLabelJariJari = new JLabel("Jari-Jari :");
-        jLabelJariJari.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelJariJari.setBounds(70, 100, 150, 25);
-        add(jLabelJariJari);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 270, 100, 30);
+        add(btnHitung);
 
-        jTextFieldJariJari.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldJariJari.setBounds(230, 100, 200, 25);
-        add(jTextFieldJariJari);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 270, 100, 30);
+        add(btnReset);
 
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 250, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 270, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 270, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 270, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 270, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double jariJari = Double.parseDouble(jTextFieldJariJari.getText());
-                if (jariJari <= 0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
+                String inputJari = jTextFieldJariJari.getText();
+
+                // Validasi input kosong
+                if (inputJari.isEmpty()) {
+                    throw new IllegalArgumentException("Input tidak boleh kosong!");
                 }
+
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputJari);
+
+                // Konversi setelah validasi
+                double jariJari = Double.parseDouble(inputJari);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(jariJari);
+
+                // Jalankan perhitungan pada thread
                 Lingkaran newLingkaran = new Lingkaran(jariJari);
+                Thread thread = new Thread(new HitungBendaTask(newLingkaran));
+                thread.start();
+                thread.join();
 
-                Thread calcThread = new Thread(newLingkaran);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-
+                // Menampilkan hasil
                 new HasilLingkaranView(newLingkaran).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> jTextFieldJariJari.setText(""));
-        jButtonClose.addActionListener(e -> dispose());
+        btnReset.addActionListener(e -> jTextFieldJariJari.setText(""));
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {

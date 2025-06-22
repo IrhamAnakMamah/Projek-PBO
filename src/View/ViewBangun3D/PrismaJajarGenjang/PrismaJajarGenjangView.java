@@ -1,6 +1,12 @@
 package View.ViewBangun3D.PrismaJajarGenjang;
 
 import Benda3D.PrismaJajarGenjang;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+// Diasumsikan ada kelas HasilPrismaJajarGenjangView di package yang sesuai
+//import View.ViewBangun3D.Hasil.HasilPrismaJajarGenjangView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,9 +15,10 @@ public class PrismaJajarGenjangView extends JFrame {
     PrismaJajarGenjang prisma;
     JTextField jTextFieldAlas = new JTextField();
     JTextField jTextFieldTinggiAlas = new JTextField();
+    JTextField jTextFieldSisiMiring = new JTextField();
     JTextField jTextFieldSudut = new JTextField();
     JTextField jTextFieldTinggiPrisma = new JTextField();
-    JTextField jTextFieldSisi = new JTextField();
+
 
     public PrismaJajarGenjangView() {
         initComponents();
@@ -36,113 +43,124 @@ public class PrismaJajarGenjangView extends JFrame {
         jLabelTitle.setBounds(50, 20, 400, 37);
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Alas Jajar Genjang:", jTextFieldAlas, 100);
+        addLabelAndText("Sisi Miring Alas:", jTextFieldSisiMiring, 140);
+        addLabelAndText("Tinggi Alas:", jTextFieldTinggiAlas, 180);
+        addLabelAndText("Sudut Lancip Alas (°):", jTextFieldSudut, 220);
+        addLabelAndText("Tinggi Prisma:", jTextFieldTinggiPrisma, 260);
+        addSeparator(0, 450);
 
-        JLabel jLabelAlas = new JLabel("Alas Jajar Genjang:");
-        jLabelAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelAlas.setBounds(70, 100, 150, 25);
-        add(jLabelAlas);
-        jTextFieldAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldAlas.setBounds(230, 100, 200, 25);
-        add(jTextFieldAlas);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 470, 100, 30);
+        add(btnHitung);
 
-        JLabel jLabelTinggiAlas = new JLabel("Tinggi Alas :");
-        jLabelTinggiAlas.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiAlas.setBounds(70, 140, 150, 25);
-        add(jLabelTinggiAlas);
-        jTextFieldTinggiAlas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiAlas.setBounds(230, 140, 200, 25);
-        add(jTextFieldTinggiAlas);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 470, 100, 30);
+        add(btnReset);
 
-        JLabel jLabelSudut = new JLabel("Sudut Lancip Alas :");
-        jLabelSudut.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSudut.setBounds(70, 180, 150, 25);
-        add(jLabelSudut);
-        jTextFieldSudut.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSudut.setBounds(230, 180, 200, 25);
-        add(jTextFieldSudut);
-
-        JLabel jLabelTinggiPrisma = new JLabel("Tinggi Prisma :");
-        jLabelTinggiPrisma.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelTinggiPrisma.setBounds(70, 220, 150, 25);
-        add(jLabelTinggiPrisma);
-        jTextFieldTinggiPrisma.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldTinggiPrisma.setBounds(230, 220, 200, 25);
-        add(jTextFieldTinggiPrisma);
-
-        JLabel jLabelSisi = new JLabel("Sisi Prisma :");
-        jLabelSisi.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelSisi.setBounds(70, 260, 150, 25);
-        add(jLabelSisi);
-        jTextFieldSisi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldSisi.setBounds(230, 260, 200, 25);
-        add(jTextFieldSisi);
-
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 450, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 470, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 470, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 470, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 470, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double a = Double.parseDouble(jTextFieldAlas.getText());
-                double ta = Double.parseDouble(jTextFieldTinggiAlas.getText());
-                double s = Double.parseDouble(jTextFieldSudut.getText());
-                double tp = Double.parseDouble(jTextFieldTinggiPrisma.getText());
-                double sisi = Double.parseDouble(jTextFieldSisi.getText());
+                String inputAlas = jTextFieldAlas.getText();
+                String inputSisiMiring = jTextFieldSisiMiring.getText();
+                String inputTinggiAlas = jTextFieldTinggiAlas.getText();
+                String inputSudut = jTextFieldSudut.getText();
+                String inputTinggiPrisma = jTextFieldTinggiPrisma.getText();
 
-                PrismaJajarGenjang newPrisma = new PrismaJajarGenjang(a, ta, s, tp, sisi); //
-
-                Thread calcThread = new Thread(newPrisma);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputAlas.isEmpty() || inputSisiMiring.isEmpty() || inputTinggiAlas.isEmpty() ||
+                        inputSudut.isEmpty() || inputTinggiPrisma.isEmpty()) {
+                    throw new IllegalArgumentException("Semua input tidak boleh kosong!");
                 }
 
+                // Validasi format angka
+                new ValidasiFormatAngka().operasiFormatAngka(inputAlas);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSisiMiring);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggiAlas);
+                new ValidasiFormatAngka().operasiFormatAngka(inputSudut);
+                new ValidasiFormatAngka().operasiFormatAngka(inputTinggiPrisma);
+
+                // Konversi setelah validasi
+                double alas = Double.parseDouble(inputAlas);
+                double sisiMiring = Double.parseDouble(inputSisiMiring);
+                double tinggiAlas = Double.parseDouble(inputTinggiAlas);
+                double sudut = Double.parseDouble(inputSudut);
+                double tinggiPrisma = Double.parseDouble(inputTinggiPrisma);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(alas);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sisiMiring);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggiAlas);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(sudut);
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(tinggiPrisma);
+
+                // Validasi logika
+                if (sudut <= 0 || sudut >= 90) {
+                    throw new IllegalArgumentException("Sudut lancip harus lebih dari 0 dan kurang dari 90 derajat.");
+                }
+                if (tinggiAlas > sisiMiring) {
+                    throw new IllegalArgumentException("Tinggi alas tidak boleh lebih besar dari sisi miringnya.");
+                }
+
+                // Jalankan perhitungan pada thread
+                PrismaJajarGenjang newPrisma = new PrismaJajarGenjang(alas, tinggiAlas, sudut, tinggiPrisma, sisiMiring);
+                Thread thread = new Thread(new HitungBendaTask(newPrisma));
+                thread.start();
+                thread.join();
+
+                // Menampilkan hasil
                 new HasilPrismaJajarGenjangView(newPrisma).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> {
+        btnReset.addActionListener(e -> {
             jTextFieldAlas.setText("");
             jTextFieldTinggiAlas.setText("");
+            jTextFieldSisiMiring.setText("");
             jTextFieldSudut.setText("");
             jTextFieldTinggiPrisma.setText("");
-            jTextFieldSisi.setText("");
         });
-        jButtonClose.addActionListener(e -> dispose());
+
+        btnClose.addActionListener(e -> dispose());
+    }
+
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
     }
 
     void cek() {
         if (prisma != null) {
-            jTextFieldAlas.setText(Double.toString(prisma.alas));
-            jTextFieldTinggiAlas.setText(Double.toString(prisma.tinggi));
-            jTextFieldSudut.setText(Double.toString(prisma.sudutLancip));
-            jTextFieldTinggiPrisma.setText(Double.toString(prisma.getTinggiPrismaJajarGenjang()));
-            jTextFieldSisi.setText(Double.toString(prisma.getSisiPrismaJajarGenjang()));
+            // Diasumsikan kelas PrismaJajarGenjang dan parent-nya memiliki getter ini
+            jTextFieldAlas.setText(String.valueOf(prisma.alas));
+            jTextFieldTinggiAlas.setText(String.valueOf(prisma.tinggi));
+            jTextFieldSisiMiring.setText(String.valueOf(prisma.getSisiPrismaJajarGenjang()));
+            jTextFieldSudut.setText(String.valueOf(prisma.sudutLancip));
+            jTextFieldTinggiPrisma.setText(String.valueOf(prisma.getTinggiPrismaJajarGenjang()));
         }
     }
 }

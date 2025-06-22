@@ -10,10 +10,8 @@ public class TemberengLingkaran extends JuringLingkaran {
     private double luasTemberengLingkaran;
     private double kelilingTemberengLingkaran;
 
-    public TemberengLingkaran(double jariJari, double taliBusur, double sudut, double busur) {
+    public TemberengLingkaran(double jariJari, double sudut) {
         super(jariJari, sudut);
-        this.taliBusur = taliBusur;
-        this.busur = busur;
     }
 
     @Override

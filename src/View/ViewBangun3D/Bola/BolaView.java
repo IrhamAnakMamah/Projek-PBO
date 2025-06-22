@@ -1,6 +1,12 @@
 package View.ViewBangun3D.Bola;
 
 import Benda3D.Bola;
+import Exception.ValidasiAngkaNegatif;
+import Exception.ValidasiFormatAngka;
+import Threading.HitungBendaTask;
+// Diasumsikan ada kelas HasilBolaView di package ini atau diimpor dengan benar
+//import View.ViewBangun3D.Bola.HasilBolaView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -24,82 +30,96 @@ public class BolaView extends JFrame {
 
     private void initComponents() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        // Ukuran frame disesuaikan karena input lebih sedikit
         setSize(500, 350);
         setLayout(null);
 
         JLabel jLabelTitle = new JLabel("BOLA");
         jLabelTitle.setFont(new Font("Tahoma", Font.BOLD, 30));
-        jLabelTitle.setBounds(200, 20, 100, 37);
+        jLabelTitle.setBounds(200, 20, 300, 37); // Posisi X disesuaikan
         add(jLabelTitle);
 
-        JSeparator jSeparator1 = new JSeparator();
-        jSeparator1.setBounds(0, 70, 500, 10);
-        add(jSeparator1);
+        addSeparator(0, 70);
+        addLabelAndText("Jari-Jari:", jTextFieldJari, 100);
+        // Posisi separator dan tombol disesuaikan
+        addSeparator(0, 220);
 
-        JLabel jLabelJari = new JLabel("Jari-Jari :");
-        jLabelJari.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jLabelJari.setBounds(70, 100, 150, 25);
-        add(jLabelJari);
+        JButton btnHitung = new JButton("Hitung");
+        btnHitung.setBounds(55, 250, 100, 30);
+        add(btnHitung);
 
-        jTextFieldJari.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jTextFieldJari.setBounds(230, 100, 200, 25);
-        add(jTextFieldJari);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(195, 250, 100, 30);
+        add(btnReset);
 
-        JSeparator jSeparator2 = new JSeparator();
-        jSeparator2.setBounds(0, 250, 500, 10);
-        add(jSeparator2);
-
-        JButton jButtonsSave = new JButton("Hitung");
-        jButtonsSave.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonsSave.setBounds(55, 270, 100, 30);
-        add(jButtonsSave);
-
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonReset.setBounds(195, 270, 100, 30);
-        add(jButtonReset);
-
-        JButton jButtonClose = new JButton("Close");
-        jButtonClose.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jButtonClose.setBounds(335, 270, 100, 30);
-        add(jButtonClose);
+        JButton btnClose = new JButton("Close");
+        btnClose.setBounds(335, 250, 100, 30);
+        add(btnClose);
 
         cek();
 
-        jButtonsSave.addActionListener(e -> {
+        btnHitung.addActionListener(e -> {
             try {
-                double jari = Double.parseDouble(jTextFieldJari.getText());
-                if (jari <= 0) {
-                    throw new NumberFormatException("Input tidak boleh nol atau negatif!");
-                }
-                Bola newBola = new Bola(jari); //
+                String inputJari = jTextFieldJari.getText();
 
-                Thread calcThread = new Thread(newBola);
-                calcThread.start();
-                try {
-                    calcThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                // Validasi input kosong
+                if (inputJari.isEmpty()) {
+                    throw new IllegalArgumentException("Input tidak boleh kosong!");
                 }
 
+                // Validasi format angka (throw NumberFormatException)
+                new ValidasiFormatAngka().operasiFormatAngka(inputJari);
+
+                // Konversi setelah validasi format
+                double jari = Double.parseDouble(inputJari);
+
+                // Validasi angka negatif
+                new ValidasiAngkaNegatif().operasiAngkaNegatif(jari);
+
+                // Jalankan perhitungan pada thread
+                Bola newBola = new Bola(jari);
+                Thread thread = new Thread(new HitungBendaTask(newBola));
+                thread.start();
+                thread.join();
+
+                // Menampilkan hasil menggunakan HasilBolaView
                 new HasilBolaView(newBola).setVisible(true);
                 dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Input tidak valid: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Validasi Error", JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                JOptionPane.showMessageDialog(this, "Thread terganggu: " + ex.getMessage(), "Thread Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        jButtonReset.addActionListener(e -> jTextFieldJari.setText(""));
-        jButtonClose.addActionListener(e -> dispose());
+        btnReset.addActionListener(e -> {
+            jTextFieldJari.setText("");
+        });
+
+        btnClose.addActionListener(e -> dispose());
     }
 
-    void cek(){
-        if(bola != null){
+    private void addLabelAndText(String labelText, JTextField field, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Tahoma", Font.BOLD, 14));
+        label.setBounds(70, y, 150, 25);
+        add(label);
+
+        field.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        field.setBounds(230, y, 200, 25);
+        add(field);
+    }
+
+    private void addSeparator(int x, int y) {
+        JSeparator separator = new JSeparator();
+        separator.setBounds(x, y, 500, 10);
+        add(separator);
+    }
+
+    void cek() {
+        if (bola != null) {
             jTextFieldJari.setText(String.valueOf(bola.getJariJari()));
         }
-    }
-
-    public static void main(String[] args) {
-        new  BolaView().setVisible(true);
     }
 }
