@@ -1,64 +1,77 @@
+import Benda.*;
+import Benda2D.*;
+import Threading.HitungBendaTask;
+import Threading.ThreadExecutor;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
+public class MainMenuView extends JFrame {
 
-public class MainMenuView extends JFrame{
-    public MainMenuView(){
-        JFrame frame = new JFrame("Menu Sejajar Benda 2D");
-        frame.setSize(660, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public MainMenuView() {
+        setTitle("Menu Sejajar Benda 2D");
+        setSize(660, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JMenuBar menuBar = new JMenuBar();
 
-        // === Menu Lingkaran ===
-        JMenu lingkaranMenu = new JMenu("Lingkaran");
+        // === Menu Bangun Datar Sederhana ===
+        menuBar.add(new JMenu("Lingkaran"));
+        menuBar.add(new JMenu("Persegi"));
+        menuBar.add(new JMenu("Persegi Panjang"));
+        menuBar.add(new JMenu("Segitiga"));
+        menuBar.add(new JMenu("Trapesium"));
+        menuBar.add(new JMenu("Jajar Genjang"));
+        menuBar.add(new JMenu("Layang-Layang"));
+        menuBar.add(new JMenu("Belah Ketupat"));
 
-        JMenuItem hitungLingkaranItem = new JMenuItem("Hitung Lingkaran");
-        JMenuItem temberengItem = new JMenuItem("Tembereng");
-        JMenuItem juringItem = new JMenuItem("Juring");
+        // === Menu Threading ===
+        JMenu threadMenu = new JMenu("Thread");
 
-        JMenu bolaMenu = new JMenu("Bola");
-        JMenuItem cincinBolaItem = new JMenuItem("Cincin Bola");
-        bolaMenu.add(cincinBolaItem); // Bola -> Cincin Bola
+        JMenuItem hitungBendaItem = new JMenuItem("Thread Hitung Benda");
+        hitungBendaItem.addActionListener(this::runHitungBendaTask);
+        threadMenu.add(hitungBendaItem);
 
-        lingkaranMenu.add(hitungLingkaranItem);
-        lingkaranMenu.add(temberengItem);
-        lingkaranMenu.add(juringItem);
-        lingkaranMenu.addSeparator();
-        lingkaranMenu.add(bolaMenu);
+        JMenuItem executorItem = new JMenuItem("Thread Executor");
+        executorItem.addActionListener(this::runThreadExecutor);
+        threadMenu.add(executorItem);
 
-        // === Menu Persegi (kosong/tanpa submenu) ===
-        JMenu persegiMenu = new JMenu("Persegi");
+        menuBar.add(threadMenu);
 
-        // === Menu Persegi Panjang ===
-        JMenu persegiPanjangMenu = new JMenu("Persegi Panjang");
+        setJMenuBar(menuBar);
+        setVisible(true);
+    }
 
-        // === Menu Segitiga ===
-        JMenu segitigaMenu = new JMenu("Segitiga");
+    // Thread manual: 5 thread satu per satu (HitungBendaTask)
+    private void runHitungBendaTask(ActionEvent e) {
+        List<Benda2D> bendaList = List.of(
+                new Persegi(6),
+                new Lingkaran(7),
+                new PersegiPanjang(4, 10),
+                new Segitiga(3, 4),
+                new BelahKetupat(6, 8)
+        );
 
-        // === Menu Trapesium ===
-        JMenu trapesiumMenu = new JMenu("Trapesium");
+        for (Benda2D benda : bendaList) {
+            new Thread(new HitungBendaTask(benda)).start();
+        }
+    }
 
-        // === Menu Jajar Genjang ===
-        JMenu jajarGenjangMenu = new JMenu("Jajar Genjang");
+    // Thread Executor: menggunakan ExecutorService (minimal 5 objek juga)
+    private void runThreadExecutor(ActionEvent e) {
+        List<Benda> shapes = List.of(
+                new Persegi(8),
+                new Lingkaran(5),
+                new LayangLayang(4, 6, 3, 4),
+                new Trapesium(4, 6, 3),
+                new JajarGenjang(7, 4, 5)
+        );
 
-        // === Menu Layang_Layang ===
-        JMenu layangLayangMenu = new JMenu("Layang-Layang");
+        ThreadExecutor.processShapes(shapes);
+    }
 
-        // === Menu Belah Ketupat ===
-        JMenu belahKetupatMenu = new JMenu("Belah Ketupat");
-
-        // Tambahkan semua menu ke MenuBar (sejajar)
-        menuBar.add(lingkaranMenu);
-        menuBar.add(persegiMenu);
-        menuBar.add(persegiPanjangMenu);
-        menuBar.add(segitigaMenu);
-        menuBar.add(trapesiumMenu);
-        menuBar.add(jajarGenjangMenu);
-        menuBar.add(layangLayangMenu);
-        menuBar.add(belahKetupatMenu);
-
-        // Pasang ke frame
-        frame.setJMenuBar(menuBar);
-        frame.setVisible(true);
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(MainMenuView::new);
     }
 }

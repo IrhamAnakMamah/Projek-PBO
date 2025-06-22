@@ -1,53 +1,54 @@
 package Threading;
 
+import Benda.*;
+
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import Benda.*;
-import Benda2D.*;
-import Benda3D.*;
-
 public class ThreadExecutor {
 
-    public static void processShapes(List<Benda2D> shapes) {
-        ExecutorService executor = Executors.newFixedThreadPool(4);
-
-        for (Benda2D shape : shapes) {
-            executor.submit(() -> processShape(shape));
-        }
-
-        executor.shutdown();
-    }
-
-    private static void processShape(Benda2D shape) {
-        String threadName = Thread.currentThread().getName();
+    public static void processShapes(List<Benda> shapes) {
+        ExecutorService executor = Executors.newFixedThreadPool(4); // pool dengan 4 thread
 
         try {
-            if (shape.getClass().getSuperclass().equals(Benda2D.class)) {
-                // direct subclass of bangun datar
-                Benda2D bd = (Benda2D) shape;
+            for (Benda benda : shapes) {
+                executor.submit(() -> processShape(benda));
+            }
+        } finally {
+            executor.shutdown(); // pastikan shutdown dipanggil
+        }
+    }
+
+    private static void processShape(Benda benda) {
+        String threadName = Thread.currentThread().getName();
+        String namaBenda = benda.getNama();
+        String kelas = benda.getClass().getSimpleName();
+
+        try {
+            if (benda instanceof Benda2D bd) {
                 double keliling = bd.hitungKeliling();
                 double luas = bd.hitungLuas();
-                System.out.printf("%s - [%s] 2D -> Keliling: %.2f, Luas: %.2f%n",
-                        threadName, shape.getClass().getSimpleName(), keliling, luas);
+                System.out.printf(
+                        "%s - [2D: %s] Keliling: %.2f, Luas: %.2f%n",
+                        threadName, namaBenda, keliling, luas
+                );
             }
 
-            try {
-                var volumeMethod = shape.getClass().getMethod("hitungVolume");
-                var luasPermukaanMethod = shape.getClass().getMethod("hitungLuasPermukaan");
-
-                double volume = (double) volumeMethod.invoke(shape);
-                double luasPermukaan = (double) luasPermukaanMethod.invoke(shape);
-
-                System.out.printf("%s - [%s] Volume: %.2f, Luas Permukaan: %.2f%n",
-                        threadName, shape.getClass().getSimpleName(), volume, luasPermukaan);
-            } catch (NoSuchMethodException ignored) {
-                // gpp kalo 2d dan ga punya vol sm area
+            if (benda instanceof Benda3D br) {
+                double volume = br.hitungVolume();
+                double luasPermukaan = br.hitungLuasPermukaan();
+                System.out.printf(
+                        "%s - [3D: %s] Volume: %.2f, Luas Permukaan: %.2f%n",
+                        threadName, namaBenda, volume, luasPermukaan
+                );
             }
 
         } catch (Exception e) {
-            System.err.println("Error processing shape " + shape.getClass().getSimpleName() + ": " + e.getMessage());
+            System.err.printf(
+                    "%s - Error saat memproses %s: %s%n",
+                    threadName, kelas, e.getMessage()
+            );
         }
     }
 }

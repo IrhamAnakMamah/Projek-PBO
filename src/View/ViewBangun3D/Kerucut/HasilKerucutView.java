@@ -43,7 +43,7 @@ public class HasilKerucutView extends JFrame {
         jLabelVolume.setBounds(70, 160, 150, 25);
         add(jLabelVolume);
 
-        JTextField jTextFieldVolume = new JTextField(String.format("%.2f", kerucut.getVolumeKerucut())); //
+        JTextField jTextFieldVolume = new JTextField(String.format("%.2f", kerucut.hitungVolume())); //
         jTextFieldVolume.setFont(new Font("Tahoma", Font.BOLD, 16));
         jTextFieldVolume.setBounds(230, 160, 200, 30);
         jTextFieldVolume.setEditable(false);

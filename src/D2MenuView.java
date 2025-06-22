@@ -52,4 +52,5 @@ public class D2MenuView extends JFrame {
         button.addActionListener(listener);
         return button;
     }
+
 }
