@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 
  */
-public class PrismaPersegiPanjang extends PersegiPanjang implements Benda3D,Runnable {
+public class PrismaPersegiPanjang extends PersegiPanjang implements Benda3D {
     private double tinggiBalok;
     private double volumeBalok;
     private double luasPermukaanBalok;
@@ -17,14 +17,8 @@ public class PrismaPersegiPanjang extends PersegiPanjang implements Benda3D,Runn
     public PrismaPersegiPanjang(double panjang, double lebar, double tinggiBalok) {
         super(panjang, lebar);
         this.tinggiBalok = tinggiBalok;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run();
-        volumeBalok = hitungVolume();
-        luasPermukaanBalok = hitungLuasPermukaan();
+        this.volumeBalok = hitungVolume();
+        this.luasPermukaanBalok = hitungLuasPermukaan();
     }
 
     public double getTinggiBalok() {
@@ -38,7 +32,13 @@ public class PrismaPersegiPanjang extends PersegiPanjang implements Benda3D,Runn
 
     @Override
     public double hitungVolume() {
-        return getLuasPersegiPanjang() * tinggiBalok;
+        volumeBalok = super.luasPersegiPanjang * tinggiBalok;
+        return volumeBalok;
+    }
+
+    public double hitungVolume(double panjangBaru, double lebarBaru, double tinggiBaru) {
+        volumeBalok = super.hitungLuas(panjangBaru, lebarBaru) * tinggiBaru;
+        return volumeBalok;
     }
 
     public double getVolumeBalok() {
@@ -47,7 +47,10 @@ public class PrismaPersegiPanjang extends PersegiPanjang implements Benda3D,Runn
 
     @Override
     public double hitungLuasPermukaan() {
-        return 2 * (super.panjang * super.lebar + super.panjang * tinggiBalok + super.lebar * tinggiBalok);
+        double luasAlas = super.luasPersegiPanjang;
+        double kelilingAlas = super.kelilingPersegiPanjang;
+        luasPermukaanBalok =  2 * super.luasPersegiPanjang + super.kelilingPersegiPanjang * tinggiBalok;
+        return luasPermukaanBalok;
     }
 
     public double getLuasPermukaanBalok() {

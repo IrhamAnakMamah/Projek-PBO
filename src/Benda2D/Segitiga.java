@@ -9,8 +9,8 @@ public class Segitiga extends Benda2D{
 
     public double sisi;
     public double tinggi;
-    private double luasSegitiga;
-    private double kelilingSegitiga;
+    protected double luasSegitiga;
+    protected double kelilingSegitiga;
 
     public Segitiga(double sisi, double tinggi) {
         this.sisi = sisi;

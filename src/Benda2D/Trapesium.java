@@ -10,8 +10,8 @@ public class Trapesium extends Benda2D{
     public double sisiSejajar2;
     public double tinggi;
     public double sisiMiring;
-    private double luasTrapesium;
-    private double kelilingTrapesium;
+    protected double luasTrapesium;
+    protected double kelilingTrapesium;
 
     public Trapesium(double sisiSejajar1, double sisiSejajar2, double tinggi) {
         this.sisiSejajar1 = sisiSejajar1;
@@ -44,12 +44,12 @@ public class Trapesium extends Benda2D{
 
     @Override
     public double hitungKeliling() {
-        kelilingTrapesium = 2 * (sisiSejajar1 + sisiSejajar2);
+        kelilingTrapesium = sisiSejajar1 + sisiSejajar2 + 2 * sisiMiring;
         return kelilingTrapesium;
     }
 
-    public double hitungKeliling(double sisiSejajar1Baru, double sisiSejajar2Baru) {
-        kelilingTrapesium = 2 * (sisiSejajar1Baru + sisiSejajar2Baru);
+    public double hitungKeliling(double sisiSejajar1Baru, double sisiSejajar2Baru, double sisiMiringBaru) {
+        kelilingTrapesium = sisiSejajar1Baru + sisiSejajar2Baru + 2 * sisiMiringBaru;
         return kelilingTrapesium;
     }
 

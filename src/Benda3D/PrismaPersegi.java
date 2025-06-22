@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 
  */
-public class PrismaPersegi extends Persegi implements Benda3D, Runnable {
+public class PrismaPersegi extends Persegi implements Benda3D{
     private double volumeKubus;
     private double tinggiPrisma;
     private double luasPermukaanKubus;
@@ -17,14 +17,7 @@ public class PrismaPersegi extends Persegi implements Benda3D, Runnable {
     public PrismaPersegi(double sisi, double tinggi) {
         super(sisi);
         tinggiPrisma = tinggi;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run();
-        volumeKubus = hitungVolume();
-        luasPermukaanKubus = hitungLuasPermukaan();
+        this.luasPermukaanKubus = hitungLuasPermukaan();
     }
 
     public double getTinggiPrisma() {
@@ -38,7 +31,13 @@ public class PrismaPersegi extends Persegi implements Benda3D, Runnable {
 
     @Override
     public double hitungVolume() {
-        return getLuasPersegi() * tinggiPrisma;
+        volumeKubus = super.luasPersegi * tinggiPrisma;
+        return volumeKubus;
+    }
+
+    public double hitungVolume(double sisiBaru, double tinggiBaru){
+        volumeKubus = super.hitungLuas(sisiBaru) * tinggiBaru;
+        return volumeKubus;
     }
 
     public double getVolumeKubus() {
@@ -47,7 +46,13 @@ public class PrismaPersegi extends Persegi implements Benda3D, Runnable {
 
     @Override
     public double hitungLuasPermukaan() {
-        return 2*getLuasPersegi() + getKelilingPersegi()*tinggiPrisma;
+        luasPermukaanKubus = 2 * super.luasPersegi + super.kelilingPersegi * tinggiPrisma;
+        return luasPermukaanKubus;
+    }
+
+    public double hitungLuasPermukaan(double sisiBaru, double tinggiBaru) {
+        luasPermukaanKubus = 2 * super.hitungLuas(sisiBaru) + super.hitungKeliling(sisiBaru) * tinggiBaru;
+        return luasPermukaanKubus;
     }
 
     public double getLuasPermukaanKubus() {

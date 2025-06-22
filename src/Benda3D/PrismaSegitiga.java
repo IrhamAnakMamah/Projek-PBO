@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 
  */
-public class PrismaSegitiga extends Segitiga implements Benda3D, Runnable{
+public class PrismaSegitiga extends Segitiga implements Benda3D{
     private double tinggiPrismaSegitiga;
     private double sisiA, sisiB, sisiC;
     private double volumePrismaSegitiga;
@@ -19,16 +19,9 @@ public class PrismaSegitiga extends Segitiga implements Benda3D, Runnable{
     public PrismaSegitiga(double alas, double tinggi, double tinggiPrismaSegitiga) {
         super(alas,tinggi);
         this.tinggiPrismaSegitiga = tinggiPrismaSegitiga;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run();
-        luasSisiTegak = hitungLuasSisiTegak();
-        luasPermukaanPrismaSegitiga = hitungLuasPermukaan();
-        volumePrismaSegitiga = hitungVolume();
-    }
+        this.volumePrismaSegitiga = hitungVolume();
+        this.luasPermukaanPrismaSegitiga = hitungLuasPermukaan();
+            }
 
     public double getTinggiPrismaSegitiga() {
         return tinggiPrismaSegitiga;
@@ -53,7 +46,13 @@ public class PrismaSegitiga extends Segitiga implements Benda3D, Runnable{
 
     @Override
     public double hitungVolume() {
-        return getLuasSegitiga() * tinggiPrismaSegitiga;
+        volumePrismaSegitiga = super.luasSegitiga * tinggiPrismaSegitiga;
+        return volumePrismaSegitiga;
+    }
+
+    public double hitungVolume(double alasBaru, double tinggiBaru, double tinggiPrismaBaru) {
+        volumePrismaSegitiga = (0.5 * alasBaru * tinggiBaru) * tinggiPrismaBaru;
+        return volumePrismaSegitiga;
     }
 
     public double getVolumePrismaSegitiga() {
@@ -70,7 +69,17 @@ public class PrismaSegitiga extends Segitiga implements Benda3D, Runnable{
 
     @Override
     public double hitungLuasPermukaan() {
-        return getLuasSegitiga() + luasSisiTegak;
+        double kelilingAlas = super.kelilingSegitiga;
+        double luasAlas = super.luasSegitiga;
+        luasPermukaanPrismaSegitiga =  (2 * luasAlas) + (kelilingAlas * tinggiPrismaSegitiga);
+        return luasPermukaanPrismaSegitiga;
+    }
+
+    public double hitungLuasPermukaan(double alasBaru, double tinggiBaru, double tinggiPrismaBaru) {
+        double kelilingAlas = 3 * alasBaru;
+        double luasAlas = 0.5 * alasBaru * tinggiBaru;
+        luasPermukaanPrismaSegitiga = (2 * luasAlas) + (kelilingAlas * tinggiPrismaBaru);
+        return luasPermukaanPrismaSegitiga;
     }
 
     public double getLuasPermukaanSegitiga() {

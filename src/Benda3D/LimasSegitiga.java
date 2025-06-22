@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 
  */
-public class LimasSegitiga extends Segitiga implements Benda3D,Runnable {
+public class LimasSegitiga extends Segitiga implements Benda3D{
     private double tinggiLimasSegitiga;
     private double volumeLimasSegitiga;
     private double luasPermukaanLimasSegitiga;
@@ -23,14 +23,8 @@ public class LimasSegitiga extends Segitiga implements Benda3D,Runnable {
         this.sisi2 = sisi2;
         this.sisi3 = sisi3;
         totalSisi = sisi1 + sisi2 + sisi3;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run();
-        volumeLimasSegitiga = hitungVolume();
-        luasPermukaanLimasSegitiga = hitungLuasPermukaan();
+        this.volumeLimasSegitiga = hitungVolume();
+        this.luasPermukaanLimasSegitiga = hitungLuasPermukaan();
     }
 
     public double getTotalSisi() {
@@ -60,7 +54,13 @@ public class LimasSegitiga extends Segitiga implements Benda3D,Runnable {
 
     @Override
     public double hitungVolume() {
-        return (double)1.0/3.0 * (tinggiLimasSegitiga * getLuasSegitiga());
+        volumeLimasSegitiga = (double)1.0/3.0 * (tinggiLimasSegitiga * super.luasSegitiga);
+        return volumeLimasSegitiga;
+    }
+
+    public double hitungVolume(double alasBaru, double tinggiBaru, double tinggiLimasBaru) {
+        volumeLimasSegitiga = (1.0 / 3.0) * super.hitungLuas(alasBaru, tinggiBaru) * tinggiLimasBaru;
+        return volumeLimasSegitiga;
     }
 
     public double getVolumeLimasSegitiga() {
@@ -69,7 +69,15 @@ public class LimasSegitiga extends Segitiga implements Benda3D,Runnable {
 
     @Override
     public double hitungLuasPermukaan() {
-        return getLuasSegitiga() + totalSisi;
+        luasPermukaanLimasSegitiga = 4 * ((Math.sqrt(3) / 4.0) * Math.pow(super.sisi, 2));
+        return luasPermukaanLimasSegitiga;
+    }
+
+    public double hitungLuasPermukaan(double alasBaru, double tinggiBaru, double tinggiLimasBaru) {
+        double luasAlas = (Math.sqrt(3) / 4.0) * Math.pow(alasBaru, 2);
+        double luasSisiTegak = 3 * 0.5 * alasBaru * tinggiBaru;
+        luasPermukaanLimasSegitiga = luasAlas + luasSisiTegak;
+        return luasPermukaanLimasSegitiga;
     }
 
     public double getLuasPermukaanLimasPersegiPanjang() {

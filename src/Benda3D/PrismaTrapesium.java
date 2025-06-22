@@ -9,7 +9,7 @@ import java.util.*;
 /**
  *
  */
-public class PrismaTrapesium extends Trapesium implements Benda3D, Runnable{
+public class PrismaTrapesium extends Trapesium implements Benda3D{
     private double tinggiPrismaTrapesium;
     private double sisiA, sisiB, sisiC, sisiD; // Sisi-sisi alas trapesium
     private double volumePrismaTrapesium;
@@ -24,13 +24,6 @@ public class PrismaTrapesium extends Trapesium implements Benda3D, Runnable{
         this.sisiC = sisiC;
         this.sisiD = sisiD;
         this.tinggiPrismaTrapesium = tinggiPrismaTrapesium;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run(); // Menghitung luas dan keliling trapesium alas
-        this.luasSisiTegak = hitungLuasSisiTegak(); // Hitung luas sisi tegak setelah sisi-sisi diinisialisasi
         this.volumePrismaTrapesium = hitungVolume();
         this.luasPermukaanPrismaTrapesium = hitungLuasPermukaan();
     }
@@ -67,8 +60,13 @@ public class PrismaTrapesium extends Trapesium implements Benda3D, Runnable{
 
     @Override
     public double hitungVolume(){
-        // Volume Prisma = Luas Alas * Tinggi Prisma
-        return super.hitungLuas() * tinggiPrismaTrapesium;
+        volumePrismaTrapesium = super.luasTrapesium * tinggiPrismaTrapesium;
+        return volumePrismaTrapesium;
+    }
+
+    public double hitungVolume(double sisiSejajar1, double sisiSejajar2, double tinggiBaru, double tinggiPrismaBaru) {
+        volumePrismaTrapesium = (0.5 * (sisiSejajar1 + sisiSejajar2) * tinggiBaru) * tinggiPrismaBaru;
+        return volumePrismaTrapesium;
     }
 
     // Perbaikan rumus hitungLuasSisiTegak() - seharusnya keliling alas * tinggi prisma
@@ -82,9 +80,11 @@ public class PrismaTrapesium extends Trapesium implements Benda3D, Runnable{
     }
 
     @Override
-    public double hitungLuasPermukaan(){
-        // Luas Permukaan Prisma = (2 * Luas Alas) + Luas Selimut (Luas Sisi Tegak)
-        return (2 * super.getLuasTrapesium()) + luasSisiTegak;
+    public double hitungLuasPermukaan() {
+        double luasAlas = super.luasTrapesium;
+        double kelilingAlas = super.kelilingTrapesium;
+        luasPermukaanPrismaTrapesium = 2 * luasAlas + kelilingAlas * tinggiPrismaTrapesium;
+        return luasPermukaanPrismaTrapesium;
     }
 
     public double getLuasPermukaanPrismaTrapesium() {

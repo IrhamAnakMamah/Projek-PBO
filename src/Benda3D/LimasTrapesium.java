@@ -6,7 +6,7 @@ import Benda2D.Trapesium;
 import java.io.*;
 import java.util.*;
 
-public class LimasTrapesium extends Trapesium implements Benda3D, Runnable{
+public class LimasTrapesium extends Trapesium implements Benda3D{
     private double tinggiLimas;
     private double tinggiSisiTegak1;
     private double tinggiSisiTegak2;
@@ -18,14 +18,8 @@ public class LimasTrapesium extends Trapesium implements Benda3D, Runnable{
         this.tinggiLimas = tinggiLimas;
         this.tinggiSisiTegak1 = tinggiSisiTegak1;
         this.tinggiSisiTegak2 = tinggiSisiTegak2;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run();
-        volumeLimasTrapesium = hitungVolume();
-        luasPermukaanLimasTrapesium = hitungLuasPermukaan();
+        this.volumeLimasTrapesium = hitungVolume();
+        this.luasPermukaanLimasTrapesium = hitungLuasPermukaan();
     }
 
     public double getTinggiLimas() {
@@ -47,7 +41,13 @@ public class LimasTrapesium extends Trapesium implements Benda3D, Runnable{
 
     @Override
     public double hitungVolume() {
-        return (double)1.0/3.0 * getLuasTrapesium() * tinggiLimas;
+        volumeLimasTrapesium = (double)1.0/3.0 * super.luasTrapesium * tinggiLimas;
+        return volumeLimasTrapesium;
+    }
+
+    public double hitungVolume(double alasAtasBaru, double sisiSejajar1Baru, double sisiSejajar2Baru, double tinggiBaru, double tinggiLimasBaru) {
+        volumeLimasTrapesium = (1.0 / 3.0) * super.hitungLuas(sisiSejajar1Baru, sisiSejajar2Baru, tinggiBaru) * tinggiLimasBaru;
+        return volumeLimasTrapesium;
     }
 
     public double getVolumeLimasTrapesium() {
@@ -56,7 +56,16 @@ public class LimasTrapesium extends Trapesium implements Benda3D, Runnable{
 
     @Override
     public double hitungLuasPermukaan() {
-        return getLuasPermukaanLimasTrapesium() + getKelilingTrapesium();
+        double luasAlas = super.luasTrapesium;
+
+        double tinggiSisiTegak = Math.sqrt(Math.pow(tinggiLimas, 2) + Math.pow((super.sisiSejajar1 - super.sisiSejajar2) / 2.0, 2));
+
+        double luasSegitigaAtas = 0.5 * super.sisiSejajar1 * tinggiSisiTegak;
+        double luasSegitigaBawah = 0.5 * super.sisiSejajar2 * tinggiSisiTegak;
+        double luasSegitigaMiring = 2 * (0.5 * super.sisiMiring * tinggiSisiTegak);
+
+        luasPermukaanLimasTrapesium = luasAlas + luasSegitigaAtas + luasSegitigaBawah + luasSegitigaMiring;
+        return luasPermukaanLimasTrapesium;
     }
 
     public double getLuasPermukaanLimasTrapesium() {

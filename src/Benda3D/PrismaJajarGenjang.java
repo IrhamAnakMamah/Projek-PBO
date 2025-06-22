@@ -6,7 +6,7 @@ import Benda2D.JajarGenjang;
 import java.io.*;
 import java.util.*;
 
-public class PrismaJajarGenjang extends JajarGenjang implements Benda3D, Runnable{
+public class PrismaJajarGenjang extends JajarGenjang implements Benda3D{
     private double tinggiPrismaJajarGenjang;
     private double sisiPrismaJajarGenjang;
     private double volumePrismaJajarGenjang;
@@ -16,14 +16,8 @@ public class PrismaJajarGenjang extends JajarGenjang implements Benda3D, Runnabl
         super(alas, sudutLancip, tinggi);
         this.sisiPrismaJajarGenjang = sisi;
         this.tinggiPrismaJajarGenjang = tinggi;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run();
-        volumePrismaJajarGenjang = hitungVolume();
-        luasPermukaanPrismaJajarGenjang = hitungLuasPermukaan();
+        this.volumePrismaJajarGenjang = hitungVolume();
+        this.luasPermukaanPrismaJajarGenjang = hitungLuasPermukaan();
     }
 
     public double getTinggiPrismaJajarGenjang() {
@@ -41,8 +35,15 @@ public class PrismaJajarGenjang extends JajarGenjang implements Benda3D, Runnabl
 
     @Override
     public double hitungVolume() {
-        return getLuasJajarGenjang() * tinggiPrismaJajarGenjang;
+        volumePrismaJajarGenjang = super.luasJajarGenjang * tinggiPrismaJajarGenjang;
+        return volumePrismaJajarGenjang;
     }
+
+    public double hitungVolume(double alasBaru, double tinggiAlasBaru, double tinggiPrismaBaru) {
+        volumePrismaJajarGenjang = alasBaru * tinggiAlasBaru * tinggiPrismaBaru;
+        return volumePrismaJajarGenjang;
+    }
+
 
     public double getVolumePrismaJajarGenjang() {
         return volumePrismaJajarGenjang;
@@ -50,7 +51,15 @@ public class PrismaJajarGenjang extends JajarGenjang implements Benda3D, Runnabl
 
     @Override
     public double hitungLuasPermukaan() {
-        return 2 * getLuasJajarGenjang() + 2 * hitungLuas(sisiPrismaJajarGenjang) + 2 * hitungLuas(tinggiPrismaJajarGenjang * sisiPrismaJajarGenjang);
+        luasPermukaanPrismaJajarGenjang = 2 * super.luasJajarGenjang + super.kelilingJajarGenjang * tinggiPrismaJajarGenjang;
+        return luasPermukaanPrismaJajarGenjang;
+    }
+
+    public double hitungLuasPermukaan(double alasBaru, double tinggiAlasBaru, double tinggiPrismaBaru) {
+        double luasAlas = alasBaru * tinggiAlasBaru;
+        double kelilingBaru = 2 * (alasBaru + tinggiAlasBaru);
+        luasPermukaanPrismaJajarGenjang = 2 * luasAlas + kelilingBaru * tinggiPrismaBaru;
+        return luasPermukaanPrismaJajarGenjang;
     }
 
     public double getLuasPermukaanPrismaJajarGenjang() {

@@ -60,6 +60,17 @@ public class LimasPersegiPanjang extends PersegiPanjang implements Benda3D{
         return luasPermukaanLimasPersegiPanjang;
     }
 
+    public double hitungLuasPermukaan(double panjangBaru, double lebarBaru, double tinggiBaru) {
+        double tinggiSegitigaPanjang = Math.sqrt(Math.pow(tinggiBaru, 2) + Math.pow(lebarBaru / 2, 2));
+        double tinggiSegitigaLebar = Math.sqrt(Math.pow(tinggiBaru, 2) + Math.pow(panjangBaru / 2, 2));
+
+        double luasSisiPanjang = panjangBaru * tinggiSegitigaPanjang;
+        double luasSisiLebar = lebarBaru * tinggiSegitigaLebar;
+
+        luasPermukaanLimasPersegiPanjang = (panjangBaru * lebarBaru) + 2 * (0.5 * luasSisiPanjang) + 2 * (0.5 * luasSisiLebar);
+        return luasPermukaanLimasPersegiPanjang;
+    }
+
     public double getLuasPermukaanLimasPersegiPanjang() {
         return hitungLuasPermukaan();
     }

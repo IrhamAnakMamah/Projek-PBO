@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * 
  */
-public class TemberengBola extends Bola implements Benda3D, Runnable{
+public class TemberengBola extends Bola implements Benda3D{
     private double theta;
     private double jarijariLingkaran;
     private double tinggiTembereng;
@@ -20,14 +20,8 @@ public class TemberengBola extends Bola implements Benda3D, Runnable{
         //this.jariLingkaran = jariLingkaran;
         this.jarijariLingkaran = jariJariBola;
         this.tinggiTembereng = tinggiTembereng;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Menghitung " + getNama());
-        super.run();
-        volumeTemberengBola = hitungVolume();
-        luasPermukaanTemberengBola = hitungLuasPermukaan();
+        this.volumeTemberengBola = hitungVolume();
+        this.luasPermukaanTemberengBola = hitungLuasPermukaan();
     }
 
     public double getTheta() {
@@ -45,7 +39,15 @@ public class TemberengBola extends Bola implements Benda3D, Runnable{
 
     @Override
     public double hitungVolume(){
-        return ((super.getPi() * Math.pow(tinggiTembereng, 2)) / 3.0) * (3 * super.getJariJari() - tinggiTembereng);
+        double r = super.jariJari;
+        double h = tinggiTembereng;
+        volumeTemberengBola = (1.0 / 6.0) * super.pi * h * (3 * r * r + h * h);
+        return volumeTemberengBola;
+    }
+
+    public double hitungVolume(double jariJariBaru, double tinggiTemberengBaru) {
+        volumeTemberengBola = (1.0 / 6.0) * super/pi * tinggiTemberengBaru * (3 * jariJariBaru * jariJariBaru + tinggiTemberengBaru * tinggiTemberengBaru);
+        return volumeTemberengBola;
     }
 
     public double getVolumeTemberengBola(){
@@ -54,7 +56,15 @@ public class TemberengBola extends Bola implements Benda3D, Runnable{
 
     @Override
     public double hitungLuasPermukaan(){
-        return (super.getKelilingLingkaran() * tinggiTembereng) + (super.pi * Math.pow(jarijariLingkaran, 2));
+        double r = super.jariJari;
+        double h = tinggiTembereng;
+        luasPermukaanTemberengBola = 2 * super.pi * r * h;
+        return luasPermukaanTemberengBola;
+    }
+
+    public double hitungLuasPermukaan(double jariJariBaru, double tinggiTemberengBaru) {
+        luasPermukaanTemberengBola = 2 * super.pi * jariJariBaru * tinggiTemberengBaru;
+        return luasPermukaanTemberengBola;
     }
 
     public double getLuasPermukaanTemberengBola(){
