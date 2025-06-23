@@ -20,6 +20,7 @@ public class CincinBola extends Bola implements Benda3D{
         this.jarakDuaBidang = jarakDuaBidang;
         this.volumeCincinBola = hitungLuas();
         this.luasPermukaanCincinBola = hitungLuasPermukaan();
+        this.volumeCincinBola = hitungVolume();
     }
 
     public double getJariJariDalam() {
@@ -37,9 +38,31 @@ public class CincinBola extends Bola implements Benda3D{
 
 
     @Override
-    public double hitungLuasPermukaan() {
-        return 2 * getPi() * jariJari * jarakDuaBidang ;
+    public double hitungVolume() {
+        double h = jarakDuaBidang;
+        double r = super.getJariJari();
+        volumeCincinBola = super.pi * h * h * (r - h / 3.0);
+        return volumeCincinBola;
     }
+
+    public double hitungVolume(double jariJariBaru, double jarakDuaBidangBaru) {
+        volumeCincinBola = super.pi * jarakDuaBidangBaru * jarakDuaBidangBaru * (jariJariBaru - jarakDuaBidangBaru / 3.0);
+        return volumeCincinBola;
+    }
+
+
+    @Override
+    public double hitungLuasPermukaan() {
+        double h = jarakDuaBidang;
+        double r = super.getJariJari();
+        luasPermukaanCincinBola = 2 * pi * r * h;
+        return luasPermukaanCincinBola;
+    }
+    public double hitungLuasPermukaan(double jariJariBaru, double tinggiCincinBaru) {
+        luasPermukaanCincinBola = 2 * super.pi* jariJariBaru * tinggiCincinBaru;
+        return luasPermukaanCincinBola;
+    }
+
 
     public double getLuasPermukaanCincinBola() {
         return luasPermukaanCincinBola;

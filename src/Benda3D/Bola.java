@@ -10,8 +10,8 @@ import java.util.*;
  * 
  */
 public class Bola extends Lingkaran implements Benda3D {
-    private double volumeBola;
-    private double luasPermukaanBola;
+    protected double volumeBola;
+    protected double luasPermukaanBola;
 
     public Bola(double jariJari) {
         super(jariJari);
