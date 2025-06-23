@@ -5,50 +5,45 @@ import Benda.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ThreadExecutor {
 
-    public static void processShapes(List<Benda> shapes) {
-        ExecutorService executor = Executors.newFixedThreadPool(4); // pool dengan 4 thread
+    public static void processShapes(List<Benda> bendaList) {
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+
+        for (Benda benda : bendaList) {
+            executor.submit(() -> processBenda(benda));
+        }
+
+        executor.shutdown(); // Tidak menerima task baru
 
         try {
-            for (Benda benda : shapes) {
-                executor.submit(() -> processShape(benda));
+            // Tunggu maksimal 10 detik agar semua thread selesai
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                System.out.println("Beberapa task belum selesai tepat waktu.");
             }
-        } finally {
-            executor.shutdown(); // pastikan shutdown dipanggil
+        } catch (InterruptedException e) {
+            System.out.println("Thread interrupted saat menunggu executor selesai.");
         }
     }
 
-    private static void processShape(Benda benda) {
+    private static void processBenda(Benda benda) {
         String threadName = Thread.currentThread().getName();
-        String namaBenda = benda.getNama();
-        String kelas = benda.getClass().getSimpleName();
+        System.out.println("[" + threadName + "] Menghitung " + benda.getNama());
 
-        try {
-            if (benda instanceof Benda2D bd) {
-                double keliling = bd.hitungKeliling();
-                double luas = bd.hitungLuas();
-                System.out.printf(
-                        "%s - [2D: %s] Keliling: %.2f, Luas: %.2f%n",
-                        threadName, namaBenda, keliling, luas
-                );
-            }
-
-            if (benda instanceof Benda3D br) {
-                double volume = br.hitungVolume();
-                double luasPermukaan = br.hitungLuasPermukaan();
-                System.out.printf(
-                        "%s - [3D: %s] Volume: %.2f, Luas Permukaan: %.2f%n",
-                        threadName, namaBenda, volume, luasPermukaan
-                );
-            }
-
-        } catch (Exception e) {
-            System.err.printf(
-                    "%s - Error saat memproses %s: %s%n",
-                    threadName, kelas, e.getMessage()
-            );
+        if (benda instanceof Benda2D b2d) {
+            double luas = b2d.hitungLuas();
+            double keliling = b2d.hitungKeliling();
+            System.out.printf("[%s] %s -> Luas: %.2f, Keliling: %.2f%n",
+                    threadName, b2d.getNama(), luas, keliling);
+        } else if (benda instanceof Benda3D b3d) {
+            double volume = b3d.hitungVolume();
+            double luasPermukaan = b3d.hitungLuasPermukaan();
+            System.out.printf("[%s] %s -> Volume: %.2f, Luas Permukaan: %.2f%n",
+                    threadName, b3d.getNama(), volume, luasPermukaan);
+        } else {
+            System.out.printf("[%s] %s -> Tipe tidak dikenali%n", threadName, benda.getNama());
         }
     }
 }
