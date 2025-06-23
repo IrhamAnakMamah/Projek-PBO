@@ -2,12 +2,6 @@ package Benda3D;
 
 import Benda.Benda3D;
 
-import java.io.*;
-import java.util.*;
-
-/**
- * 
- */
 public class JuringBola extends Bola implements Benda3D{
     private double theta;
     private double volumeJuringBola;
