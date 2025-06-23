@@ -132,7 +132,6 @@ public class CincinBolaView extends JFrame {
     void cek() {
         if (cincinBola != null) {
             jTextFieldJariBesar.setText(String.valueOf(cincinBola.getJariJari()));
-            jTextFieldJariKecil.setText(String.valueOf(cincinBola.getJariJariDalam()));
             jTextFieldJarak.setText(String.valueOf(cincinBola.getJarakDuaBidang()));
         }
     }

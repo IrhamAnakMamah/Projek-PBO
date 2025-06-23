@@ -9,7 +9,6 @@ import java.util.*;
  * 
  */
 public class CincinBola extends Bola implements Benda3D{
-    private double jariJariDalam;
     private double jarakDuaBidang;
     private double volumeCincinBola;
     private double luasPermukaanCincinBola;
@@ -18,17 +17,8 @@ public class CincinBola extends Bola implements Benda3D{
     public CincinBola(double jariJari, double jariJariDalam, double jarakDuaBidang) {
         super(jariJari);
         this.jarakDuaBidang = jarakDuaBidang;
-        this.volumeCincinBola = hitungLuas();
         this.luasPermukaanCincinBola = hitungLuasPermukaan();
         this.volumeCincinBola = hitungVolume();
-    }
-
-    public double getJariJariDalam() {
-        return jariJariDalam;
-    }
-
-    public double getJarakDuaBidang() {
-        return jarakDuaBidang;
     }
 
     @Override
@@ -69,7 +59,11 @@ public class CincinBola extends Bola implements Benda3D{
     }
 
     public double getVolumeCincinBola() {
-        return 0;
+        return volumeCincinBola;
+    }
+
+    public double getJarakDuaBidang() {
+        return jarakDuaBidang;
     }
 
 }
